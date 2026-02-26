@@ -1,4 +1,4 @@
-package org.example;
+package ru.rastoropova;
 
 public final class App {
     private App() {

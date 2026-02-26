@@ -1,4 +1,4 @@
-package org.example;
+package ru.rastoropova;
 
 import org.junit.jupiter.api.Test;
 
