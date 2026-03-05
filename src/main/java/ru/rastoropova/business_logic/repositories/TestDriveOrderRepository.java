@@ -9,5 +9,5 @@ public interface TestDriveOrderRepository {
     TestDriveOrder find(int id);
     List<TestDriveOrder> findAll();
     void update(TestDriveOrder order);
-    void delete(TestDriveOrder order);
+    void delete(int id);
 }

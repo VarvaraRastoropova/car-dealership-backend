@@ -9,5 +9,5 @@ public interface SteeringWheelDetailRepository {
     SteeringWheelDetail find(int id);
     List<SteeringWheelDetail> findAll();
     void update(SteeringWheelDetail detail);
-    void delete(SteeringWheelDetail detail);
+    void delete(int id);
 }

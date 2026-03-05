@@ -9,5 +9,5 @@ public interface WheelsDetailRepository {
     WheelsDetail find(int id);
     List<WheelsDetail> findAll();
     void update(WheelsDetail detail);
-    void delete(WheelsDetail detail);
+    void delete(int id);
 }

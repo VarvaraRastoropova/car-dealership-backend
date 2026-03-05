@@ -15,9 +15,7 @@ public class InMemoryBodyDetailRepository implements BodyDetailRepository {
         storage.put(detail.getId(), detail);
     }
 
-    public BodyDetail find(int id) {
-        return storage.get(id);
-    }
+    public BodyDetail find(int id) { return storage.get(id); }
 
     public List<BodyDetail> findAll() {
         return new ArrayList<>(storage.values());
@@ -29,7 +27,5 @@ public class InMemoryBodyDetailRepository implements BodyDetailRepository {
         }
     }
 
-    public void delete(BodyDetail detail) {
-        storage.remove(detail.getId());
-    }
+    public void delete(int id) { storage.remove(id);}
 }

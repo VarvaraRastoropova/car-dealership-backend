@@ -29,7 +29,5 @@ public class InMemoryWheelsDetailRepository implements WheelsDetailRepository {
         }
     }
 
-    public void delete(WheelsDetail detail) {
-        storage.remove(detail.getId());
-    }
+    public void delete(int id) { storage.remove(id); }
 }

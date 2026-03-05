@@ -29,7 +29,5 @@ public class InMemorySteeringWheelDetailRepository implements SteeringWheelDetai
         }
     }
 
-    public void delete(SteeringWheelDetail detail) {
-        storage.remove(detail.getId());
-    }
+    public void delete(int id) { storage.remove(id); }
 }

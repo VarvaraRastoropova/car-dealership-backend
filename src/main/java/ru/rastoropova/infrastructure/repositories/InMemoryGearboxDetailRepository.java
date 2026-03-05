@@ -29,7 +29,5 @@ public class InMemoryGearboxDetailRepository implements GearboxDetailRepository 
         }
     }
 
-    public void delete(GearboxDetail detail) {
-        storage.remove(detail.getId());
-    }
+    public void delete(int id) { storage.remove(id); }
 }

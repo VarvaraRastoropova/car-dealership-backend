@@ -9,5 +9,5 @@ public interface CarPurchaseOrderRepository {
     CarPurchaseOrder find(int id);
     List<CarPurchaseOrder> findAll();
     void update(CarPurchaseOrder order);
-    void delete(CarPurchaseOrder order);
+    void delete(int id);
 }

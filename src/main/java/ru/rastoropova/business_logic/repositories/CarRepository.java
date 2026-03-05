@@ -9,5 +9,5 @@ public interface CarRepository {
     Car find(int id);
     List<Car> findAll();
     void update(Car car);
-    void delete(Car car);
+    void delete(int id);
 }

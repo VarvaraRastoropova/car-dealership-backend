@@ -9,5 +9,5 @@ public interface GearboxDetailRepository {
     GearboxDetail find(int id);
     List<GearboxDetail> findAll();
     void update(GearboxDetail detail);
-    void delete(GearboxDetail detail);
+    void delete(int id);
 }

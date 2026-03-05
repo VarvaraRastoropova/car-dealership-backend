@@ -29,7 +29,5 @@ public class InMemoryTestDriveOrderRepository implements TestDriveOrderRepositor
         }
     }
 
-    public void delete(TestDriveOrder order) {
-        storage.remove(order.getId());
-    }
+    public void delete(int id) { storage.remove(id); }
 }

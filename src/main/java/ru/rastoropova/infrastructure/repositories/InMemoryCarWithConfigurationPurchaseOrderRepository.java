@@ -29,7 +29,5 @@ public class InMemoryCarWithConfigurationPurchaseOrderRepository implements CarW
         }
     }
 
-    public void delete(CarWithConfigurationPurchaseOrder order) {
-        storage.remove(order.getId());
-    }
+    public void delete(int id) { storage.remove(id); }
 }

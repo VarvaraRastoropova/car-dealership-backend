@@ -9,5 +9,5 @@ public interface BodyDetailRepository {
     BodyDetail find(int id);
     List<BodyDetail> findAll();
     void update(BodyDetail detail);
-    void delete(BodyDetail detail);
+    void delete(int id);
 }

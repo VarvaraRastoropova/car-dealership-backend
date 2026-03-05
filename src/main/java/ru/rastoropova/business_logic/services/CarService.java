@@ -3,6 +3,7 @@ package ru.rastoropova.business_logic.services;
 import ru.rastoropova.business_logic.cars.Car;
 import ru.rastoropova.business_logic.cars.CarFilter;
 import ru.rastoropova.business_logic.exceptions.DomainValidationException;
+import ru.rastoropova.business_logic.exceptions.EntityNotFoundException;
 import ru.rastoropova.business_logic.repositories.CarRepository;
 import ru.rastoropova.business_logic.users.Role;
 import ru.rastoropova.business_logic.users.User;
@@ -18,7 +19,7 @@ public class CarService {
 
     public Car viewCar(int id) {
         if (carRepository.find(id) == null) {
-            throw new DomainValidationException("Error: Car with id " + id + " does not exist.");
+            throw new EntityNotFoundException("Error: Car not found.");
         }
         return carRepository.find(id);
     }
@@ -56,9 +57,13 @@ public class CarService {
         }
     }
 
-    public void deleteTestDriveCar(User user, Car car) {
+    public void deleteTestDriveCar(User user, int id) {
         if (user.getRole() != Role.CAR_MANAGER && user.getRole() != Role.SYSTEM_ADMINISTRATOR) {
             throw new DomainValidationException("Error: You do not have sufficient permissions to perform this operation.");
+        }
+        Car car = carRepository.find(id);
+        if (car == null) {
+            throw new EntityNotFoundException("Error: Car not found.");
         }
         if (car.isAvailableForTestDrive()) {
             car.setAvailabilityForTestDrive(false);
@@ -79,10 +84,13 @@ public class CarService {
         carRepository.save(car);
     }
 
-    public void deleteCarFromSystem(User user, Car car) {
+    public void deleteCarFromSystem(User user, int id) {
         if (user.getRole() != Role.SYSTEM_ADMINISTRATOR) {
             throw new DomainValidationException("Error: You do not have sufficient permissions to perform this operation.");
+        };
+        if (carRepository.find(id) == null) {
+            throw new EntityNotFoundException("Error: Car not found.");
         }
-        carRepository.delete(car);
+        carRepository.delete(id);
     }
 }

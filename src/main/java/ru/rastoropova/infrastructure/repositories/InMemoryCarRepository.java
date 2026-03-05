@@ -11,17 +11,11 @@ import java.util.Map;
 public class InMemoryCarRepository implements CarRepository {
     private Map<Integer, Car> storage = new HashMap<>();
 
-    public void save(Car car) {
-        storage.put(car.getId(), car);
-    }
+    public void save(Car car) { storage.put(car.getId(), car); }
 
-    public Car find(int id) {
-        return storage.get(id);
-    }
+    public Car find(int id) { return storage.get(id); }
 
-    public List<Car> findAll() {
-        return new ArrayList<>(storage.values());
-    }
+    public List<Car> findAll() { return new ArrayList<>(storage.values()); }
 
     public void update(Car car) {
         if (storage.containsKey(car.getId())) {
@@ -29,7 +23,5 @@ public class InMemoryCarRepository implements CarRepository {
         }
     }
 
-    public void delete(Car car) {
-        storage.remove(car.getId());
-    }
+    public void delete(int id) { storage.remove(id); }
 }

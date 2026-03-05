@@ -9,5 +9,5 @@ public interface InteriorDetailRepository {
     InteriorDetail find(int id);
     List<InteriorDetail> findAll();
     void update(InteriorDetail detail);
-    void delete(InteriorDetail detail);
+    void delete(int id);
 }

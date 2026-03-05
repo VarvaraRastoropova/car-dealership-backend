@@ -9,5 +9,5 @@ public interface EngineDetailRepository {
     EngineDetail find(int id);
     List<EngineDetail> findAll();
     void update(EngineDetail detail);
-    void delete(EngineDetail detail);
+    void delete(int id);
 }

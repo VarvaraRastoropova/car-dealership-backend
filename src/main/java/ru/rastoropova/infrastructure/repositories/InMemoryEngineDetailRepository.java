@@ -29,7 +29,5 @@ public class InMemoryEngineDetailRepository implements EngineDetailRepository {
         }
     }
 
-    public void delete(EngineDetail detail) {
-        storage.remove(detail.getId());
-    }
+    public void delete(int id) { storage.remove(id); }
 }

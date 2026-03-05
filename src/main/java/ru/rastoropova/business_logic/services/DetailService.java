@@ -2,6 +2,7 @@ package ru.rastoropova.business_logic.services;
 
 import ru.rastoropova.business_logic.details.*;
 import ru.rastoropova.business_logic.exceptions.DomainValidationException;
+import ru.rastoropova.business_logic.exceptions.EntityNotFoundException;
 import ru.rastoropova.business_logic.repositories.*;
 import ru.rastoropova.business_logic.users.Role;
 import ru.rastoropova.business_logic.users.User;
@@ -31,12 +32,20 @@ public class DetailService {
         if (user.getRole() != Role.WAREHOUSE_ADMINISTRATOR && user.getRole() != Role.SYSTEM_ADMINISTRATOR) {
             throw new DomainValidationException("Error: You do not have sufficient permissions to perform this operation.");
         }
+        BodyDetail detail = bodyDetailRepository.find(id);
+        if (detail == null) {
+            throw new EntityNotFoundException("Error: Body not found.");
+        }
         return bodyDetailRepository.find(id);
     }
 
     public EngineDetail viewEngineDetail(User user, int id) {
         if (user.getRole() != Role.WAREHOUSE_ADMINISTRATOR && user.getRole() != Role.SYSTEM_ADMINISTRATOR) {
             throw new DomainValidationException("Error: You do not have sufficient permissions to perform this operation.");
+        }
+        EngineDetail detail = engineDetailRepository.find(id);
+        if (detail == null) {
+            throw new EntityNotFoundException("Error: Engine not found.");
         }
         return engineDetailRepository.find(id);
     }
@@ -45,12 +54,20 @@ public class DetailService {
         if (user.getRole() != Role.WAREHOUSE_ADMINISTRATOR && user.getRole() != Role.SYSTEM_ADMINISTRATOR) {
             throw new DomainValidationException("Error: You do not have sufficient permissions to perform this operation.");
         }
+        GearboxDetail detail = gearboxDetailRepository.find(id);
+        if (detail == null) {
+            throw new EntityNotFoundException("Error: Gearbox not found.");
+        }
         return gearboxDetailRepository.find(id);
     }
 
     public InteriorDetail viewInteriorDetail(User user, int id) {
         if (user.getRole() != Role.WAREHOUSE_ADMINISTRATOR && user.getRole() != Role.SYSTEM_ADMINISTRATOR) {
             throw new DomainValidationException("Error: You do not have sufficient permissions to perform this operation.");
+        }
+        InteriorDetail detail = interiorDetailRepository.find(id);
+        if (detail == null) {
+            throw new EntityNotFoundException("Error: Interior not found.");
         }
         return interiorDetailRepository.find(id);
     }
@@ -59,12 +76,20 @@ public class DetailService {
         if (user.getRole() != Role.WAREHOUSE_ADMINISTRATOR && user.getRole() != Role.SYSTEM_ADMINISTRATOR) {
             throw new DomainValidationException("Error: You do not have sufficient permissions to perform this operation.");
         }
+        SteeringWheelDetail detail = steeringWheelDetailRepository.find(id);
+        if (detail == null) {
+            throw new EntityNotFoundException("Error: Steering Wheel not found.");
+        }
         return steeringWheelDetailRepository.find(id);
     }
 
     public WheelsDetail viewWheelsDetail(User user, int id) {
         if (user.getRole() != Role.WAREHOUSE_ADMINISTRATOR && user.getRole() != Role.SYSTEM_ADMINISTRATOR) {
             throw new DomainValidationException("Error: You do not have sufficient permissions to perform this operation.");
+        }
+        WheelsDetail detail = wheelsDetailRepository.find(id);
+        if (detail == null) {
+            throw new EntityNotFoundException("Error: Wheels not found.");
         }
         return wheelsDetailRepository.find(id);
     }
@@ -115,12 +140,18 @@ public class DetailService {
         if (user.getRole() != Role.WAREHOUSE_ADMINISTRATOR && user.getRole() != Role.SYSTEM_ADMINISTRATOR) {
             throw new DomainValidationException("Error: You do not have sufficient permissions to perform this operation.");
         }
+        if (bodyDetailRepository.find(detail.getId()) != null) {
+            throw new DomainValidationException("Error: Body detail already exists.");
+        }
         bodyDetailRepository.save(detail);
     }
 
     public void addEngineDetailToSystem(User user, EngineDetail detail) {
         if (user.getRole() != Role.WAREHOUSE_ADMINISTRATOR && user.getRole() != Role.SYSTEM_ADMINISTRATOR) {
             throw new DomainValidationException("Error: You do not have sufficient permissions to perform this operation.");
+        }
+        if (engineDetailRepository.find(detail.getId()) != null) {
+            throw new DomainValidationException("Error: Engine detail already exists.");
         }
         engineDetailRepository.save(detail);
     }
@@ -129,12 +160,18 @@ public class DetailService {
         if (user.getRole() != Role.WAREHOUSE_ADMINISTRATOR && user.getRole() != Role.SYSTEM_ADMINISTRATOR) {
             throw new DomainValidationException("Error: You do not have sufficient permissions to perform this operation.");
         }
+        if (gearboxDetailRepository.find(detail.getId()) != null) {
+            throw new DomainValidationException("Error: Gearbox detail already exists.");
+        }
         gearboxDetailRepository.save(detail);
     }
 
         public void addInteriorDetailToSystem(User user, InteriorDetail detail) {
         if (user.getRole() != Role.WAREHOUSE_ADMINISTRATOR && user.getRole() != Role.SYSTEM_ADMINISTRATOR) {
             throw new DomainValidationException("Error: You do not have sufficient permissions to perform this operation.");
+        }
+        if (interiorDetailRepository.find(detail.getId()) != null) {
+            throw new DomainValidationException("Error: Interior detail already exists.");
         }
         interiorDetailRepository.save(detail);
     }
@@ -143,6 +180,9 @@ public class DetailService {
         if (user.getRole() != Role.WAREHOUSE_ADMINISTRATOR && user.getRole() != Role.SYSTEM_ADMINISTRATOR) {
             throw new DomainValidationException("Error: You do not have sufficient permissions to perform this operation.");
         }
+        if (steeringWheelDetailRepository.find(detail.getId()) != null) {
+            throw new DomainValidationException("Error: Steering wheel detail already exists.");
+        }
         steeringWheelDetailRepository.save(detail);
     }
 
@@ -150,48 +190,69 @@ public class DetailService {
         if (user.getRole() != Role.WAREHOUSE_ADMINISTRATOR && user.getRole() != Role.SYSTEM_ADMINISTRATOR) {
             throw new DomainValidationException("Error: You do not have sufficient permissions to perform this operation.");
         }
+        if (wheelsDetailRepository.find(detail.getId()) != null) {
+            throw new DomainValidationException("Error: Wheels detail already exists.");
+        }
         wheelsDetailRepository.save(detail);
     }
 
-    public void deleteBodyDetailFromSystem(User user, BodyDetail detail) {
+    public void deleteBodyDetailFromSystem(User user, int id) {
         if (user.getRole() != Role.SYSTEM_ADMINISTRATOR) {
             throw new DomainValidationException("Error: You do not have sufficient permissions to perform this operation.");
         }
-        bodyDetailRepository.delete(detail);
+        if (bodyDetailRepository.find(id) == null) {
+            throw new EntityNotFoundException("Error: Body detail not found.");
+        }
+        bodyDetailRepository.delete(id);
     }
 
-    public void deleteEngineDetailFromSystem(User user, EngineDetail detail) {
+    public void deleteEngineDetailFromSystem(User user, int id) {
         if (user.getRole() != Role.SYSTEM_ADMINISTRATOR) {
             throw new DomainValidationException("Error: You do not have sufficient permissions to perform this operation.");
         }
-        engineDetailRepository.delete(detail);
+        if (engineDetailRepository.find(id) == null) {
+            throw new EntityNotFoundException("Error: Engine detail not found.");
+        }
+        engineDetailRepository.delete(id);
     }
 
-    public void deleteGearboxDetailFromSystem(User user, GearboxDetail detail) {
+    public void deleteGearboxDetailFromSystem(User user, int id) {
         if (user.getRole() != Role.SYSTEM_ADMINISTRATOR) {
             throw new DomainValidationException("Error: You do not have sufficient permissions to perform this operation.");
         }
-        gearboxDetailRepository.delete(detail);
+        if (gearboxDetailRepository.find(id) == null) {
+            throw new EntityNotFoundException("Error: Gearbox detail not found.");
+        }
+        gearboxDetailRepository.delete(id);
     }
 
-    public void deleteInteriorDetailFromSystem(User user, InteriorDetail detail) {
+    public void deleteInteriorDetailFromSystem(User user, int id) {
         if (user.getRole() != Role.SYSTEM_ADMINISTRATOR) {
             throw new DomainValidationException("Error: You do not have sufficient permissions to perform this operation.");
         }
-        interiorDetailRepository.delete(detail);
+        if (interiorDetailRepository.find(id) == null) {
+            throw new EntityNotFoundException("Error: Interior detail not found.");
+        }
+        interiorDetailRepository.delete(id);
     }
 
-    public void deleteSteeringWheelDetailFromSystem(User user, SteeringWheelDetail detail) {
+    public void deleteSteeringWheelDetailFromSystem(User user, int id) {
         if (user.getRole() != Role.SYSTEM_ADMINISTRATOR) {
             throw new DomainValidationException("Error: You do not have sufficient permissions to perform this operation.");
         }
-        steeringWheelDetailRepository.delete(detail);
+        if (steeringWheelDetailRepository.find(id) == null) {
+            throw new EntityNotFoundException("Error: Steering wheel detail not found.");
+        }
+        steeringWheelDetailRepository.delete(id);
     }
 
-    public void deleteWheelsDetailFromSystem(User user, WheelsDetail detail) {
+    public void deleteWheelsDetailFromSystem(User user, int id) {
         if (user.getRole() != Role.SYSTEM_ADMINISTRATOR) {
             throw new DomainValidationException("Error: You do not have sufficient permissions to perform this operation.");
         }
-        wheelsDetailRepository.delete(detail);
+        if (wheelsDetailRepository.find(id) == null) {
+            throw new EntityNotFoundException("Error: Wheels detail not found.");
+        }
+        wheelsDetailRepository.delete(id);
     }
 }

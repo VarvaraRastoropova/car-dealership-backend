@@ -29,7 +29,5 @@ public class InMemoryInteriorDetailRepository implements InteriorDetailRepositor
         }
     }
 
-    public void delete(InteriorDetail detail) {
-        storage.remove(detail.getId());
-    }
+    public void delete(int id) { storage.remove(id); }
 }

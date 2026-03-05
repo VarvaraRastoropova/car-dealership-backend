@@ -97,35 +97,37 @@ public class CarDealershipTests {
     @Test
     public void viewCar_shouldReturnCar_whenCarExists() {
         // Arrange
-        Car car = createCarBMW320i(1);
+        Car car1 = createCarBMW320i(1);
+        when(carRepository.find(1)).thenReturn(car1);
 
         // Act
-        when(carRepository.find(1)).thenReturn(car);
+        Car car2 = carService.viewCar(1);
 
         // Assert
-        assertEquals(car, carService.viewCar(1));
+        assertEquals(car1, car2);
     }
 
     @Test
     public void viewCar_shouldThrowException_whenCarNotFound() {
-        // Act
+        // Arrange
         when(carRepository.find(1)).thenReturn(null);
 
-        // Assert
+        // Act + Assert
         assertThrows(RuntimeException.class, () -> carService.viewCar(1));
     }
 
     @Test
     public void viewCarList_shouldReturnCars() {
         // Arrange
-        List<Car> cars = List.of(createCarPorsche911(1),  createCarBMW330i(2), createCarBMW320i(3));
+        List<Car> cars1 = List.of(createCarPorsche911(1),  createCarBMW330i(2), createCarBMW320i(3));
+        when(carRepository.findAll()).thenReturn(cars1);
 
         // Act
-        when(carRepository.findAll()).thenReturn(cars);
+        List<Car> cars2 = carService.viewCarList();
 
         // Assert
-        assertEquals(cars, carService.viewCarList());
-        assertEquals(3, cars.size());
+        assertEquals(cars1, cars2);
+        assertEquals(3, cars1.size());
     }
 
     @Test
@@ -134,9 +136,9 @@ public class CarDealershipTests {
         CarFilter filter =  new CarFilter();
         filter.setBrand("BMW");
         List<Car> cars = List.of(createCarPorsche911(1),  createCarBMW330i(2), createCarBMW320i(3));
+        when(carRepository.findAll()).thenReturn(cars);
 
         // Act
-        when(carRepository.findAll()).thenReturn(cars);
         carService.viewFilterCarList(filter);
 
         // Assert
@@ -151,12 +153,10 @@ public class CarDealershipTests {
         User customer = new User(1, "Bob", Role.CUSTOMER);
         User carManager = new User(1, "Bob", Role.CAR_MANAGER);
         CarPurchaseOrder order = new CarPurchaseOrder(1, customer.getId(), carManager.getId(), model.getId(), model.getBasePrice());
-
-        // Act
         when(carPurchaseOrderRepository.findAll()).thenReturn(new ArrayList<>());
 
-        // Assert
-        assertThrows(RuntimeException.class, () -> orderService.orderCar(customer, car));
+        // Act + Assert
+        assertThrows(RuntimeException.class, () -> orderService.orderCar(customer, car.getId()));
     }
 
     @Test
@@ -166,9 +166,9 @@ public class CarDealershipTests {
         CarModel model = mock(CarModel.class);
         User customer = new User(1, "Bob", Role.CUSTOMER);
         Configuration configuration = mock(Configuration.class);
+        when(carWithConfigurationPurchaseOrderRepository.findAll()).thenReturn(new ArrayList<>());
 
         // Act
-        when(carWithConfigurationPurchaseOrderRepository.findAll()).thenReturn(new ArrayList<>());
         orderService.orderCarWithConfiguration(customer, model, configuration);
 
         // Assert
@@ -182,10 +182,10 @@ public class CarDealershipTests {
         User customer = new User(1, "Bob", Role.CUSTOMER);
         User carManager = new User(1, "Bob", Role.CAR_MANAGER);
         carService.addTestDriveCar(carManager, car);
+        when(testDriveOrderRepository.findAll()).thenReturn(new ArrayList<>());
 
         // Act
-        when(testDriveOrderRepository.findAll()).thenReturn(new ArrayList<>());
-        orderService.signUpTestDrive(customer, car, "12.05.26", "12:45");
+        orderService.signUpTestDrive(customer, car.getId(), "12.05.26", "12:45");
 
         // Assert
         verify(testDriveOrderRepository, times(1)).save(any(TestDriveOrder.class));
@@ -197,40 +197,42 @@ public class CarDealershipTests {
         Car car = createCarBMW320i(1);
         User warehouseAdministrator = new User(1, "Bob", Role.WAREHOUSE_ADMINISTRATOR);
 
-        // Assert
-        assertThrows(RuntimeException.class, () -> carService.deleteTestDriveCar(warehouseAdministrator, car));
+        // Act + Assert
+        assertThrows(RuntimeException.class, () -> carService.deleteTestDriveCar(warehouseAdministrator, car.getId()));
     }
 
     @Test
     public void viewOrderCars_shouldReturnOrder_whenUserIsSystemAdministrator() {
         // Arrange
         User systemAdministrator = new User(1, "Bob", Role.SYSTEM_ADMINISTRATOR);
-        List<CarPurchaseOrder> orders = List.of(
+        List<CarPurchaseOrder> orders1 = List.of(
                 new CarPurchaseOrder(1, 1, 1, 1, 100000),
                 new CarPurchaseOrder(2, 1, 1, 1, 100000));
+        when(carPurchaseOrderRepository.findAll()).thenReturn(orders1);
 
         // Act
-        when(carPurchaseOrderRepository.findAll()).thenReturn(orders);
+        List<CarPurchaseOrder> orders2 = orderService.viewOrdersCars(systemAdministrator);
 
         // Assert
-        assertEquals(orders, orderService.viewOrdersCars(systemAdministrator));
-        assertEquals(2, orders.size());
+        assertEquals(orders1, orders2);
+        assertEquals(2, orders1.size());
     }
 
     @Test
     public void viewOrdersCarsWithConfiguration_shouldReturnOrder_whenUserIsSystemAdministrator() {
         // Arrange
         User systemAdministrator = new User(1, "Bob", Role.SYSTEM_ADMINISTRATOR);
-        List<CarWithConfigurationPurchaseOrder> orders = List.of(
+        List<CarWithConfigurationPurchaseOrder> orders1 = List.of(
                 new CarWithConfigurationPurchaseOrder(1, 1, 1, 1, 100000, createConfiguration()),
                 new CarWithConfigurationPurchaseOrder(2, 1, 1, 1, 100000, createConfiguration()));
+        when(carWithConfigurationPurchaseOrderRepository.findAll()).thenReturn(orders1);
 
         // Act
-        when(carWithConfigurationPurchaseOrderRepository.findAll()).thenReturn(orders);
+        List<CarWithConfigurationPurchaseOrder> orders2 = orderService.viewOrdersCarsWithConfiguration(systemAdministrator);
 
         // Assert
-        assertEquals(orders, orderService.viewOrdersCarsWithConfiguration(systemAdministrator));
-        assertEquals(2, orders.size());
+        assertEquals(orders1, orders2);
+        assertEquals(2, orders1.size());
     }
 
     @Test
@@ -242,11 +244,9 @@ public class CarDealershipTests {
         carService.addTestDriveCar(carManager, bmw);
         carService.addTestDriveCar(carManager, porsche);
         List<Car> cars = List.of(bmw, porsche);
-
-        // Act
         when(carRepository.findAll()).thenReturn(cars);
 
-        // Assert
+        // Act + Assert
         assertEquals(2, carService.viewCarsForTestDrive().size());
     }
 
@@ -256,15 +256,15 @@ public class CarDealershipTests {
         Car bmw = createCarBMW320i(1);
         Car porsche = createCarPorsche911(1);
         User systemAdministrator = new User(1, "Bob", Role.SYSTEM_ADMINISTRATOR);
+        when(carRepository.find(bmw.getId())).thenReturn(bmw);
+        when(carRepository.find(porsche.getId())).thenReturn(porsche);
         carService.addTestDriveCar(systemAdministrator, bmw);
         carService.addTestDriveCar(systemAdministrator, porsche);
-        carService.deleteCarFromSystem(systemAdministrator, bmw);
-        carService.deleteCarFromSystem(systemAdministrator, porsche);
-
-        // Act
+        carService.deleteCarFromSystem(systemAdministrator, bmw.getId());
+        carService.deleteCarFromSystem(systemAdministrator, porsche.getId());
         when(carRepository.findAll()).thenReturn(List.of());
 
-        // Assert
+        // Act + Assert
         assertEquals(0, carService.viewCarsForTestDrive().size());
     }
 
@@ -272,16 +272,17 @@ public class CarDealershipTests {
     public void viewTestDriveApplications_shouldReturnTestDriveApplications() {
         // Arrange
         User carManager = new User(1, "Bob", Role.CAR_MANAGER);
-        List<TestDriveOrder> orders = List.of(
+        List<TestDriveOrder> orders1 = List.of(
                 new TestDriveOrder(1, 1, 1, "14,12,26","12;20"),
                 new TestDriveOrder(1, 1, 1, "14,12,26","12;20"));
+        when(orderService.viewTestDriveApplications(carManager)).thenReturn(orders1);
 
         // Act
-        when(orderService.viewTestDriveApplications(carManager)).thenReturn(orders);
+       List<TestDriveOrder> orders2 = orderService.viewTestDriveApplications(carManager);
 
         // Assert
-        assertEquals(orders, orderService.viewTestDriveApplications(carManager));
-        assertEquals(2, orderService.viewTestDriveApplications(carManager).size());
+        assertEquals(orders1, orders2);
+        assertEquals(2, orders2.size());
     }
 
     @Test
@@ -303,7 +304,7 @@ public class CarDealershipTests {
         User customer = new User(1, "Bob", Role.CUSTOMER);
         BodyDetail detail = new BodyDetail(1, 100, "body", BodyType.SEDAN, "BLACK");
 
-        // Assert
+        // Act + Assert
         assertThrows(RuntimeException.class, () -> detailService.addBodyDetailToSystem(customer, detail));
     }
 
@@ -312,12 +313,13 @@ public class CarDealershipTests {
         // Arrange
         User systemAdministrator = new User(1, "Bob", Role.SYSTEM_ADMINISTRATOR);
         BodyDetail detail = new BodyDetail(1, 100, "body", BodyType.SEDAN, "BLACK");
+        when(bodyDetailRepository.find(detail.getId())).thenReturn(detail);
 
         // Act
-        detailService.deleteBodyDetailFromSystem(systemAdministrator, detail);
+        detailService.deleteBodyDetailFromSystem(systemAdministrator, detail.getId());
 
         // Assert
-        verify(bodyDetailRepository, times(1)).delete(detail);
+        verify(bodyDetailRepository, times(1)).delete(detail.getId());
     }
 
     @Test
@@ -325,21 +327,22 @@ public class CarDealershipTests {
         // Arrange
         User customer = new User(1, "Bob", Role.CUSTOMER);
 
-        // Assert
+        // Act + Assert
         assertThrows(RuntimeException.class, () -> detailService.viewBodyDetail(customer, 1));
     }
 
     @Test
     public void viewDetail_shouldReturnDetail() {
         // Arrange
-        BodyDetail detail = new BodyDetail(1, 100, "body", BodyType.SEDAN, "BLACK");
+        BodyDetail detail1 = new BodyDetail(1, 100, "body", BodyType.SEDAN, "BLACK");
         User warehouseAdministrator = new User(1, "Bob", Role.WAREHOUSE_ADMINISTRATOR);
+        when(bodyDetailRepository.find(1)).thenReturn(detail1);
 
         // Act
-        when(bodyDetailRepository.find(1)).thenReturn(detail);
+        BodyDetail detail2 = detailService.viewBodyDetail(warehouseAdministrator, 1);
 
         // Assert
-        assertEquals(detail, detailService.viewBodyDetail(warehouseAdministrator, 1));
+        assertEquals(detail1, detail2);
     }
 
     @Test
@@ -348,12 +351,9 @@ public class CarDealershipTests {
         List<BodyDetail> details = List.of(
                 new BodyDetail(1, 100, "body", BodyType.SEDAN, "BLACK"),
                 new BodyDetail(2, 100, "body", BodyType.SEDAN, "BLACK"));
-        User warehouseAdministrator = new User(1, "Bob", Role.WAREHOUSE_ADMINISTRATOR);
-
-        // Act
         when(bodyDetailRepository.findAll()).thenReturn(details);
 
-        // Assert
+        // Act + Assert
         assertEquals(2, details.size());
     }
 
@@ -376,9 +376,9 @@ public class CarDealershipTests {
         // Arrange
         Car car = createCarBMW320i(1);
         User systemAdministrator = new User(1, "Bob", Role.SYSTEM_ADMINISTRATOR);
+        when(carRepository.find(car.getId())).thenReturn(null);
 
         // Act
-        when(carRepository.find(car.getId())).thenReturn(null);
         carService.addCarToSystem(systemAdministrator, car);
 
         // Assert
@@ -390,11 +390,9 @@ public class CarDealershipTests {
         // Arrange
         Car car = createCarBMW320i(1);
         User systemAdministrator = new User(1, "Bob", Role.SYSTEM_ADMINISTRATOR);
-
-        // Act
         when(carRepository.find(car.getId())).thenReturn(car);
 
-        // Assert
+        // Act + Assert
         assertThrows(RuntimeException.class, () -> carService.addCarToSystem(systemAdministrator, car));
     }
 
@@ -403,11 +401,9 @@ public class CarDealershipTests {
         // Arrange
         Car car = createCarBMW320i(1);
         User customer = new User(1, "Bob", Role.CUSTOMER);
-
-        // Act
         when(carRepository.find(car.getId())).thenReturn(car);
 
-        // Assert
+        // Act + Assert
         assertThrows(RuntimeException.class, () -> carService.addCarToSystem(customer, car));
     }
 
@@ -415,13 +411,14 @@ public class CarDealershipTests {
     public void updateCarPurchaseOrder_shouldCompleted() {
         // Arrange
         CarPurchaseOrder order = new CarPurchaseOrder(2, 1, 1, 1, 100000);
+        when(carPurchaseOrderRepository.find(order.getId())).thenReturn(order);
 
         // Act
-        order.approve();
-        order.waitPayment();
-        order.pay();
-        order.ready();
-        order.complete();
+        orderService.changeCarPurchaseOrderStatus(order.getId(), CarPurchaseOrderStatus.APPROVED);
+        orderService.changeCarPurchaseOrderStatus(order.getId(), CarPurchaseOrderStatus.WAITING_PAYMENT);
+        orderService.changeCarPurchaseOrderStatus(order.getId(), CarPurchaseOrderStatus.PAID);
+        orderService.changeCarPurchaseOrderStatus(order.getId(), CarPurchaseOrderStatus.READY);
+        orderService.changeCarPurchaseOrderStatus(order.getId(), CarPurchaseOrderStatus.COMPLETED);
 
         // Assert
         assertEquals(CarPurchaseOrderStatus.COMPLETED, order.getStatus());
@@ -431,28 +428,30 @@ public class CarDealershipTests {
     public void updateCarPurchaseOrder_shouldThrowException() {
         // Arrange
         CarPurchaseOrder order = new CarPurchaseOrder(2, 1, 1, 1, 100000);
+        when(carPurchaseOrderRepository.find(order.getId())).thenReturn(order);
 
         // Act
-        order.approve();
-        order.waitPayment();
-        order.pay();
+        orderService.changeCarPurchaseOrderStatus(order.getId(), CarPurchaseOrderStatus.APPROVED);
+        orderService.changeCarPurchaseOrderStatus(order.getId(), CarPurchaseOrderStatus.WAITING_PAYMENT);
+        orderService.changeCarPurchaseOrderStatus(order.getId(), CarPurchaseOrderStatus.PAID);
 
         // Assert
-        assertThrows(RuntimeException.class, () -> order.cancel());;
+        assertThrows(RuntimeException.class, () -> orderService.changeCarPurchaseOrderStatus(order.getId(), CarPurchaseOrderStatus.CANCELLED));;
     }
 
     @Test
     public void updateCarWithConfigurationPurchaseOrder_shouldCompleted() {
         // Arrange
         CarWithConfigurationPurchaseOrder order = new CarWithConfigurationPurchaseOrder(1, 1, 1, 1, 100000, createConfiguration());
+        when(carWithConfigurationPurchaseOrderRepository.find(order.getId())).thenReturn(order);
 
         // Act
-        order.approve();
-        order.waitPayment();
-        order.pay();
-        order.waitDelivery();
-        order.ready();
-        order.complete();
+        orderService.changeCarWithConfigurationPurchaseOrderStatus(order.getId(), CarWithConfigurationPurchaseOrderStatus.APPROVED);
+        orderService.changeCarWithConfigurationPurchaseOrderStatus(order.getId(), CarWithConfigurationPurchaseOrderStatus.WAITING_PAYMENT);
+        orderService.changeCarWithConfigurationPurchaseOrderStatus(order.getId(), CarWithConfigurationPurchaseOrderStatus.PAID);
+        orderService.changeCarWithConfigurationPurchaseOrderStatus(order.getId(), CarWithConfigurationPurchaseOrderStatus.WAITING_DELIVERY);
+        orderService.changeCarWithConfigurationPurchaseOrderStatus(order.getId(), CarWithConfigurationPurchaseOrderStatus.READY);
+        orderService.changeCarWithConfigurationPurchaseOrderStatus(order.getId(), CarWithConfigurationPurchaseOrderStatus.COMPLETED);
 
         // Assert
         assertEquals(CarWithConfigurationPurchaseOrderStatus.COMPLETED, order.getStatus());
@@ -462,24 +461,26 @@ public class CarDealershipTests {
     public void updateCarWithConfigurationPurchaseOrder_shouldThrowException() {
         // Arrange
         CarWithConfigurationPurchaseOrder order = new CarWithConfigurationPurchaseOrder(1, 1, 1, 1, 100000, createConfiguration());
+        when(carWithConfigurationPurchaseOrderRepository.find(order.getId())).thenReturn(order);
 
         // Act
-        order.approve();
-        order.waitPayment();
-        order.pay();
+        orderService.changeCarWithConfigurationPurchaseOrderStatus(order.getId(), CarWithConfigurationPurchaseOrderStatus.APPROVED);
+        orderService.changeCarWithConfigurationPurchaseOrderStatus(order.getId(), CarWithConfigurationPurchaseOrderStatus.WAITING_PAYMENT);
+        orderService.changeCarWithConfigurationPurchaseOrderStatus(order.getId(), CarWithConfigurationPurchaseOrderStatus.PAID);
 
         // Assert
-        assertThrows(RuntimeException.class, () -> order.cancel());;
+        assertThrows(RuntimeException.class, () -> orderService.changeCarWithConfigurationPurchaseOrderStatus(order.getId(), CarWithConfigurationPurchaseOrderStatus.CANCELLED));;
     }
 
     @Test
     public void updateTestDriveOrder_shouldCompleted() {
         // Arrange
         TestDriveOrder order = new TestDriveOrder(1, 1, 1, "14,12,26","12;20");
+        when(testDriveOrderRepository.find(order.getId())).thenReturn(order);
 
         // Act
-        order.approve();
-        order.complete();
+        orderService.changeTestDriveOrderStatus(order.getId(), TestDriveOrderStatus.APPROVED);
+        orderService.changeTestDriveOrderStatus(order.getId(), TestDriveOrderStatus.COMPLETED);
 
         // Assert
         assertEquals(TestDriveOrderStatus.COMPLETED, order.getStatus());
@@ -490,8 +491,8 @@ public class CarDealershipTests {
         // Arrange
         TestDriveOrder order = new TestDriveOrder(1, 1, 1, "14,12,26","12;20");
 
-        // Assert
-        assertThrows(RuntimeException.class, () -> order.complete());;
+        // Act + Assert
+        assertThrows(RuntimeException.class, () -> orderService.changeTestDriveOrderStatus(order.getId(), TestDriveOrderStatus.COMPLETED));;
     }
 
     @Test
@@ -499,7 +500,7 @@ public class CarDealershipTests {
         // Arrange
         Car car = createCarBMW320i(1);
 
-        // Assert
+        // Act + Assert
         assertThrows(RuntimeException.class, () -> car.getConfiguration().calculatePrice(car.getModel()));
     }
 }
