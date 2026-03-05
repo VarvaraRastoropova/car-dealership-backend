@@ -10,7 +10,7 @@ public class CarModel {
     private int id;
     private int basePrice;
     private String name;
-    private CarBrand brand;
+    private String brand;
     private Configuration baseConfiguration;
     private List<BodyDetail> availableBodies;
     private List<EngineDetail> availableEngines;
@@ -19,7 +19,7 @@ public class CarModel {
     private List<SteeringWheelDetail> availableSteeringWheels;
     private List<WheelsDetail> availableWheels;
 
-    public CarModel(int id, int basePrice, String name, CarBrand brand, Configuration baseConfiguration, List<BodyDetail> availableBodies,
+    public CarModel(int id, int basePrice, String name, String brand, Configuration baseConfiguration, List<BodyDetail> availableBodies,
                     List<EngineDetail> availableEngines, List<GearboxDetail> availableGearboxes, List<InteriorDetail> availableInteriors,
                     List<SteeringWheelDetail> availableSteeringWheels, List<WheelsDetail> availableWheels) {
         this.id = id;
@@ -47,7 +47,7 @@ public class CarModel {
         return name;
     }
 
-    public CarBrand getBrand() {
+    public String getBrand() {
         return brand;
     }
 
