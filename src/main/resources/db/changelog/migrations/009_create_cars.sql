@@ -9,9 +9,16 @@ CREATE TABLE cars (
     gearbox_id UUID,
     interior_id UUID,
     steering_wheel_id UUID,
-    wheel_id UUID,
+    wheels_id UUID,
     is_available_for_test_drive BOOLEAN NOT NULL,
     created_at TIMESTAMP,
     updated_at TIMESTAMP,
-    removed BOOLEAN
+    removed BOOLEAN,
+    FOREIGN KEY (car_model_id) REFERENCES car_models (id),
+    FOREIGN KEY (body_id) REFERENCES body_details (id),
+    FOREIGN KEY (engine_id) REFERENCES engine_details (id),
+    FOREIGN KEY (gearbox_id) REFERENCES gearbox_details (id),
+    FOREIGN KEY (interior_id) REFERENCES interior_details (id),
+    FOREIGN KEY (steering_wheel_id) REFERENCES steering_wheel_details (id),
+    FOREIGN KEY (wheels_id) REFERENCES wheels_details (id)
 )

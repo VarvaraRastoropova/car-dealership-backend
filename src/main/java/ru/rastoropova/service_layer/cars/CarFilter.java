@@ -7,7 +7,7 @@ import java.util.UUID;
 @Getter
 @Setter
 public class CarFilter {
-    private int price;
+    private Integer price;
     private String  brand;
     private UUID bodyId;
     private UUID engineId;

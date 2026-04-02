@@ -30,10 +30,10 @@ public class CarController {
     }
 
     @GetMapping("/filter")
-    public List<CarDTO> getByFilter(@RequestParam int price, @RequestParam  String brand,
-                                    @RequestParam  UUID bodyId, @RequestParam UUID engineId,
-                                    @RequestParam UUID gearboxId, @RequestParam UUID interiorId,
-                                    @RequestParam UUID steeringWheelId, @RequestParam UUID wheelsId) {
+    public List<CarDTO> getByFilter(@RequestParam(required = false) Integer price, @RequestParam(required = false) String brand,
+                                    @RequestParam(required = false) UUID bodyId, @RequestParam(required = false) UUID engineId,
+                                    @RequestParam(required = false) UUID gearboxId, @RequestParam(required = false) UUID interiorId,
+                                    @RequestParam(required = false) UUID steeringWheelId, @RequestParam(required = false) UUID wheelsId) {
         CarFilter filter = new CarFilter();
         filter.setPrice(price);
         filter.setBrand(brand);

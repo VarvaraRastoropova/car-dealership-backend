@@ -17,18 +17,17 @@
     <include file="db/changelog/migrations/011_create_car_with_configuration_purchase_order.sql"/>
     <include file="db/changelog/migrations/012_create_test_drive_order.sql"/>
 
-    <include file="db/changelog/seeds/013_create_anon_extension.sql"/>
-    <include file="db/changelog/seeds/014_seed_users.sql"/>
-    <include file="db/changelog/seeds/015_seed_body_details.sql"/>
-    <include file="db/changelog/seeds/016_seed_engine_details.sql"/>
-    <include file="db/changelog/seeds/017_seed_gearbox_details.sql"/>
-    <include file="db/changelog/seeds/018_seed_interior_details.sql"/>
-    <include file="db/changelog/seeds/019_seed_steering_wheel_details.sql"/>
-    <include file="db/changelog/seeds/020_seed_wheels_details.sql"/>
-    <include file="db/changelog/seeds/021_seed_car_models.sql"/>
-    <include file="db/changelog/seeds/022_seed_cars.sql"/>
-    <include file="db/changelog/seeds/023_seed_car_purchase_order.sql"/>
-    <include file="db/changelog/seeds/024_seed_car_with_configuration_purchase_order.sql"/>
-    <include file="db/changelog/seeds/025_seed_test_drive_order.sql"/>
+    <include file="/db/changelog/seeds/013_seed_users.sql"/>
+    <include file="/db/changelog/seeds/014_seed_body_details.sql"/>
+    <include file="/db/changelog/seeds/015_seed_engine_details.sql"/>
+    <include file="/db/changelog/seeds/016_seed_gearbox_details.sql"/>
+    <include file="/db/changelog/seeds/017_seed_interior_details.sql"/>
+    <include file="/db/changelog/seeds/018_seed_steering_wheel_details.sql"/>
+    <include file="/db/changelog/seeds/019_seed_wheels_details.sql"/>
+    <include file="/db/changelog/seeds/020_seed_car_models.sql"/>
+    <include file="/db/changelog/seeds/021_seed_cars.sql"/>
+    <include file="/db/changelog/seeds/022_seed_car_purchase_order.sql"/>
+    <include file="/db/changelog/seeds/023_seed_car_with_configuration_purchase_order.sql"/>
+    <include file="/db/changelog/seeds/024_seed_test_drive_order.sql"/>
 
 </databaseChangeLog>

@@ -10,7 +10,6 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 import ru.rastoropova.integration_layer.dto.BodyDetailDTO;
 import ru.rastoropova.service_layer.car_characteristics.BodyType;
 import ru.rastoropova.service_layer.users.Role;
@@ -19,11 +18,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
-public class BodyDetailControllerTest {
-    private static final DockerImageName ANON_IMAGE =  DockerImageName.parse("registry.gitlab.com/dalibo/postgresql_anonymizer:stable").asCompatibleSubstituteFor("postgres");
-
+public class BodyDetailControllerTests {
     @Container
-    private static final PostgreSQLContainer<?> POSTGRES = new PostgreSQLContainer<>(ANON_IMAGE)
+    private static final PostgreSQLContainer<?> POSTGRES = new PostgreSQLContainer<>("postgres:15")
             .withDatabaseName("testdb")
             .withUsername("test")
             .withPassword("test");

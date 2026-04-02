@@ -41,10 +41,11 @@ public class CarRepositoryAdapter implements CarRepository {
 
     public List<Car> findByFilter(CarFilter filter) {
         Specification<CarEntity> specification = carSpecifications.withFilter(filter);
-        return jpaRepository.findAll(specification).stream()
+        List<Car> cars = jpaRepository.findAll(specification).stream()
                 .filter(entity -> !entity.isRemoved())
                 .map(entity -> mapper.toDomain(entity))
                 .toList();
+        return cars;
     }
 
     public void update(Car car) {

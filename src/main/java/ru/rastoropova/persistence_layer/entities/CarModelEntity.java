@@ -61,6 +61,6 @@ public class CarModelEntity extends BaseEntity {
     @JoinTable(
             name = "car_model_wheels",
             joinColumns = @JoinColumn(name = "car_model_id"),
-            inverseJoinColumns = @JoinColumn(name = "wheel_id"))
+            inverseJoinColumns = @JoinColumn(name = "wheels_id"))
     private List<WheelsDetailEntity> availableWheels;
 }

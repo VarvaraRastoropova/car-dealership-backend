@@ -10,5 +10,8 @@ CREATE TABLE car_purchase_order (
     status VARCHAR NOT NULL,
     created_at TIMESTAMP,
     updated_at TIMESTAMP,
-    removed BOOLEAN
+    removed BOOLEAN,
+    FOREIGN KEY (customer_id) REFERENCES users (id),
+    FOREIGN KEY (employee_id) REFERENCES users (id),
+    FOREIGN KEY (car_model_id) REFERENCES car_models (id)
 )

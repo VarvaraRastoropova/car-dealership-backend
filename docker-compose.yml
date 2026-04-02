@@ -1,6 +1,6 @@
 services:
   db:
-    image: registry.gitlab.com/dalibo/postgresql_anonymizer:stable
+    image: postgres:15
     container_name: car_dealership_db
     env_file:
       - .env

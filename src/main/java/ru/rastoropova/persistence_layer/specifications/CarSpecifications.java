@@ -10,7 +10,7 @@ public class CarSpecifications {
     public Specification<CarEntity> withFilter(CarFilter filter) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             var predicate = criteriaBuilder.conjunction();
-            if (filter.getPrice() != 0) {
+            if (filter.getPrice() != null && filter.getPrice() != 0) {
                 predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("model").get("basePrice"), filter.getPrice()));
             }
             if (filter.getBrand() != null) {

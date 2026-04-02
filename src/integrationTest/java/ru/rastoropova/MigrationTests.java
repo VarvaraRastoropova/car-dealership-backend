@@ -9,17 +9,14 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Testcontainers
-public class MigrationTest {
-    private static final DockerImageName ANON_IMAGE =  DockerImageName.parse("registry.gitlab.com/dalibo/postgresql_anonymizer:stable").asCompatibleSubstituteFor("postgres");
-
+public class MigrationTests {
     @Container
-    private static final PostgreSQLContainer<?> POSTGRES = new PostgreSQLContainer<>(ANON_IMAGE)
+    private static final PostgreSQLContainer<?> POSTGRES = new PostgreSQLContainer<>("postgres:15")
             .withDatabaseName("testdb")
             .withUsername("test")
             .withPassword("test");
@@ -38,7 +35,7 @@ public class MigrationTest {
     void shouldExecuteAllMigrations() {
         Integer countMigrations = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM databasechangelog", Integer.class);
 
-        assertEquals(25, countMigrations);
+        assertEquals(24, countMigrations);
     }
 
     @Test
