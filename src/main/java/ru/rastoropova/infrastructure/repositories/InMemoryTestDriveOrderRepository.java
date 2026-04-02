@@ -1,21 +1,18 @@
 package ru.rastoropova.infrastructure.repositories;
 
-import ru.rastoropova.business_logic.orders.TestDriveOrder;
-import ru.rastoropova.business_logic.repositories.TestDriveOrderRepository;
+import ru.rastoropova.service_layer.orders.TestDriveOrder;
+import ru.rastoropova.service_layer.repositories.TestDriveOrderRepository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InMemoryTestDriveOrderRepository implements TestDriveOrderRepository {
-    private Map<Integer, TestDriveOrder> storage = new HashMap<>();
+    private Map<UUID, TestDriveOrder> storage = new HashMap<>();
 
     public void save(TestDriveOrder order) {
         storage.put(order.getId(), order);
     }
 
-    public TestDriveOrder find(int id) {
+    public TestDriveOrder find(UUID id) {
         return storage.get(id);
     }
 
@@ -29,5 +26,5 @@ public class InMemoryTestDriveOrderRepository implements TestDriveOrderRepositor
         }
     }
 
-    public void delete(int id) { storage.remove(id); }
+    public void delete(UUID id) { storage.remove(id); }
 }

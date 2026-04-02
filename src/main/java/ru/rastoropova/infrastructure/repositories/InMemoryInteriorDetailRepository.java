@@ -1,21 +1,18 @@
 package ru.rastoropova.infrastructure.repositories;
 
-import ru.rastoropova.business_logic.details.InteriorDetail;
-import ru.rastoropova.business_logic.repositories.InteriorDetailRepository;
+import ru.rastoropova.service_layer.details.InteriorDetail;
+import ru.rastoropova.service_layer.repositories.InteriorDetailRepository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InMemoryInteriorDetailRepository implements InteriorDetailRepository {
-    private Map<Integer, InteriorDetail> storage = new HashMap<>();
+    private Map<UUID, InteriorDetail> storage = new HashMap<>();
 
     public void save(InteriorDetail detail) {
         storage.put(detail.getId(), detail);
     }
 
-    public InteriorDetail find(int id) {
+    public InteriorDetail find(UUID id) {
         return storage.get(id);
     }
 
@@ -29,5 +26,5 @@ public class InMemoryInteriorDetailRepository implements InteriorDetailRepositor
         }
     }
 
-    public void delete(int id) { storage.remove(id); }
+    public void delete(UUID id) { storage.remove(id); }
 }

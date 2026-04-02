@@ -1,19 +1,16 @@
 package ru.rastoropova.infrastructure.repositories;
 
-import ru.rastoropova.business_logic.orders.CarPurchaseOrder;
-import ru.rastoropova.business_logic.repositories.CarPurchaseOrderRepository;
+import ru.rastoropova.service_layer.orders.CarPurchaseOrder;
+import ru.rastoropova.service_layer.repositories.CarPurchaseOrderRepository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InMemoryCarPurchaseOrderRepository implements CarPurchaseOrderRepository {
-    private Map<Integer, CarPurchaseOrder> storage = new HashMap<>();
+    private Map<UUID, CarPurchaseOrder> storage = new HashMap<>();
 
     public void save(CarPurchaseOrder order) { storage.put(order.getId(), order); }
 
-    public CarPurchaseOrder find(int id) { return storage.get(id); }
+    public CarPurchaseOrder find(UUID id) { return storage.get(id); }
 
     public List<CarPurchaseOrder> findAll() { return new ArrayList<>(storage.values()); }
 
@@ -23,5 +20,5 @@ public class InMemoryCarPurchaseOrderRepository implements CarPurchaseOrderRepos
         }
     }
 
-    public void delete(int id) { storage.remove(id); }
+    public void delete(UUID id) { storage.remove(id); }
 }

@@ -1,21 +1,18 @@
 package ru.rastoropova.infrastructure.repositories;
 
-import ru.rastoropova.business_logic.details.GearboxDetail;
-import ru.rastoropova.business_logic.repositories.GearboxDetailRepository;
+import ru.rastoropova.service_layer.details.GearboxDetail;
+import ru.rastoropova.service_layer.repositories.GearboxDetailRepository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InMemoryGearboxDetailRepository implements GearboxDetailRepository {
-    private Map<Integer, GearboxDetail> storage = new HashMap<>();
+    private Map<UUID, GearboxDetail> storage = new HashMap<>();
 
     public void save(GearboxDetail detail) {
         storage.put(detail.getId(), detail);
     }
 
-    public GearboxDetail find(int id) {
+    public GearboxDetail find(UUID id) {
         return storage.get(id);
     }
 
@@ -29,5 +26,5 @@ public class InMemoryGearboxDetailRepository implements GearboxDetailRepository 
         }
     }
 
-    public void delete(int id) { storage.remove(id); }
+    public void delete(UUID id) { storage.remove(id); }
 }

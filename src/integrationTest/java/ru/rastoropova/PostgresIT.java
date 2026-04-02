@@ -13,9 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Testcontainers
 class PostgresIT {
-
     @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15")
             .withDatabaseName("testdb")
             .withUsername("test")
             .withPassword("test");

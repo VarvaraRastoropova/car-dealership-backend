@@ -1,21 +1,18 @@
 package ru.rastoropova.infrastructure.repositories;
 
-import ru.rastoropova.business_logic.details.EngineDetail;
-import ru.rastoropova.business_logic.repositories.EngineDetailRepository;
+import ru.rastoropova.service_layer.details.EngineDetail;
+import ru.rastoropova.service_layer.repositories.EngineDetailRepository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InMemoryEngineDetailRepository implements EngineDetailRepository {
-    private Map<Integer, EngineDetail> storage = new HashMap<>();
+    private Map<UUID, EngineDetail> storage = new HashMap<>();
 
     public void save(EngineDetail detail) {
         storage.put(detail.getId(), detail);
     }
 
-    public EngineDetail find(int id) {
+    public EngineDetail find(UUID id) {
         return storage.get(id);
     }
 
@@ -29,5 +26,5 @@ public class InMemoryEngineDetailRepository implements EngineDetailRepository {
         }
     }
 
-    public void delete(int id) { storage.remove(id); }
+    public void delete(UUID id) { storage.remove(id); }
 }

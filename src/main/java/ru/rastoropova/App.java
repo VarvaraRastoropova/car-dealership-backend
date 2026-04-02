@@ -1,10 +1,11 @@
 package ru.rastoropova;
 
-public final class App {
-    private App() {
-    }
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@SpringBootApplication
+public class App {
     public static void main(String[] args) {
-        System.out.println("Java template is ready");
+        SpringApplication.run(App.class, args);
     }
 }

@@ -1,21 +1,18 @@
 package ru.rastoropova.infrastructure.repositories;
 
-import ru.rastoropova.business_logic.details.SteeringWheelDetail;
-import ru.rastoropova.business_logic.repositories.SteeringWheelDetailRepository;
+import ru.rastoropova.service_layer.details.SteeringWheelDetail;
+import ru.rastoropova.service_layer.repositories.SteeringWheelDetailRepository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InMemorySteeringWheelDetailRepository implements SteeringWheelDetailRepository {
-    private Map<Integer, SteeringWheelDetail> storage = new HashMap<>();
+    private Map<UUID, SteeringWheelDetail> storage = new HashMap<>();
 
     public void save(SteeringWheelDetail detail) {
         storage.put(detail.getId(), detail);
     }
 
-    public SteeringWheelDetail find(int id) {
+    public SteeringWheelDetail find(UUID id) {
         return storage.get(id);
     }
 
@@ -29,5 +26,5 @@ public class InMemorySteeringWheelDetailRepository implements SteeringWheelDetai
         }
     }
 
-    public void delete(int id) { storage.remove(id); }
+    public void delete(UUID id) { storage.remove(id); }
 }

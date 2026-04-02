@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/car_dealership
+    username: postgres
+    password: postgres
+  liquibase:
+    change-log: classpath:db/changelog/changelog.xml
+    enabled: true
+    parameters:
+      SEED_COUNT: 5

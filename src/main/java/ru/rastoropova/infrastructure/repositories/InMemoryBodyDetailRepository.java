@@ -1,21 +1,18 @@
 package ru.rastoropova.infrastructure.repositories;
 
-import ru.rastoropova.business_logic.details.BodyDetail;
-import ru.rastoropova.business_logic.repositories.BodyDetailRepository;
+import ru.rastoropova.service_layer.details.BodyDetail;
+import ru.rastoropova.service_layer.repositories.BodyDetailRepository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InMemoryBodyDetailRepository implements BodyDetailRepository {
-    private Map<Integer, BodyDetail> storage = new HashMap<>();
+    private Map<UUID, BodyDetail> storage = new HashMap<>();
 
     public void save(BodyDetail detail) {
         storage.put(detail.getId(), detail);
     }
 
-    public BodyDetail find(int id) { return storage.get(id); }
+    public BodyDetail find(UUID id) { return storage.get(id); }
 
     public List<BodyDetail> findAll() {
         return new ArrayList<>(storage.values());
@@ -27,5 +24,5 @@ public class InMemoryBodyDetailRepository implements BodyDetailRepository {
         }
     }
 
-    public void delete(int id) { storage.remove(id);}
+    public void delete(UUID id) { storage.remove(id);}
 }
