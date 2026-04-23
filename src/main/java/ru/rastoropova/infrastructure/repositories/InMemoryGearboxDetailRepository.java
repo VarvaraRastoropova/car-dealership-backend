@@ -8,8 +8,9 @@ import java.util.*;
 public class InMemoryGearboxDetailRepository implements GearboxDetailRepository {
     private Map<UUID, GearboxDetail> storage = new HashMap<>();
 
-    public void save(GearboxDetail detail) {
+    public GearboxDetail save(GearboxDetail detail) {
         storage.put(detail.getId(), detail);
+        return detail;
     }
 
     public GearboxDetail find(UUID id) {

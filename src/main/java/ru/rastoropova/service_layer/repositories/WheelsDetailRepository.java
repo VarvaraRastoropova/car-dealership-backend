@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface WheelsDetailRepository {
-    void save(WheelsDetail detail);
+    WheelsDetail save(WheelsDetail detail);
     WheelsDetail find(UUID id);
     List<WheelsDetail> findAll();
     void update(WheelsDetail detail);

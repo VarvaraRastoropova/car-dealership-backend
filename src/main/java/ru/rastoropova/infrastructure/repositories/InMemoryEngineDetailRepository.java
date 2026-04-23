@@ -8,8 +8,9 @@ import java.util.*;
 public class InMemoryEngineDetailRepository implements EngineDetailRepository {
     private Map<UUID, EngineDetail> storage = new HashMap<>();
 
-    public void save(EngineDetail detail) {
+    public EngineDetail save(EngineDetail detail) {
         storage.put(detail.getId(), detail);
+        return detail;
     }
 
     public EngineDetail find(UUID id) {

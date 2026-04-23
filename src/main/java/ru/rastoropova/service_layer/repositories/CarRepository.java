@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface CarRepository {
-    void save(Car car);
+    Car save(Car car);
     Car find(UUID id);
     List<Car> findAll();
     List<Car> findByFilter(CarFilter filter);

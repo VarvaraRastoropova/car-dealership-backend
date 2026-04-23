@@ -17,8 +17,9 @@ public class CarWithConfigurationPurchaseOrderRepositoryAdapter implements CarWi
     private CarWithConfigurationPurchaseOrderJpaRepository jpaRepository;
     private CarWithConfigurationPurchaseOrderEntityMapper mapper;
 
-    public void save(CarWithConfigurationPurchaseOrder order) {
-        jpaRepository.save(mapper.toEntity(order));
+    public CarWithConfigurationPurchaseOrder save(CarWithConfigurationPurchaseOrder order) {
+        CarWithConfigurationPurchaseOrderEntity saved = jpaRepository.save(mapper.toEntity(order));
+        return mapper.toDomain(saved);
     }
 
     public CarWithConfigurationPurchaseOrder find(UUID id) {
@@ -30,6 +31,13 @@ public class CarWithConfigurationPurchaseOrderRepositoryAdapter implements CarWi
 
     public List<CarWithConfigurationPurchaseOrder> findAll() {
         return jpaRepository.findAll().stream()
+                .filter(entity -> !entity.isRemoved())
+                .map(entity -> mapper.toDomain(entity))
+                .toList();
+    }
+
+    public List<CarWithConfigurationPurchaseOrder> findByUserId(UUID userId) {
+        return jpaRepository.findByCustomerId(userId).stream()
                 .filter(entity -> !entity.isRemoved())
                 .map(entity -> mapper.toDomain(entity))
                 .toList();

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface EngineDetailRepository {
-    void save(EngineDetail detail);
+    EngineDetail save(EngineDetail detail);
     EngineDetail find(UUID id);
     List<EngineDetail> findAll();
     void update(EngineDetail detail);

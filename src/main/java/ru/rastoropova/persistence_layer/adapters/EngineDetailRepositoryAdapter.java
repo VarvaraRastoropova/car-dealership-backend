@@ -17,8 +17,9 @@ public class EngineDetailRepositoryAdapter implements EngineDetailRepository {
     private EngineDetailJpaRepository jpaRepository;
     private EngineDetailEntityMapper mapper;
 
-    public void save(EngineDetail detail) {
-        jpaRepository.save(mapper.toEntity(detail));
+    public EngineDetail save(EngineDetail detail) {
+        EngineDetailEntity saved = jpaRepository.save(mapper.toEntity(detail));
+        return mapper.toDomain(saved);
     }
 
     public EngineDetail find(UUID id) {

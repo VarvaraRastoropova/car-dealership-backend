@@ -12,7 +12,10 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.rastoropova.integration_layer.dto.BodyDetailDTO;
 import ru.rastoropova.service_layer.car_characteristics.BodyType;
-import ru.rastoropova.service_layer.users.Role;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,17 +38,40 @@ public class BodyDetailControllerTests {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    private String getAccessToken() {
+        try {
+            var client = HttpClient.newHttpClient();
+            var request = HttpRequest.newBuilder()
+                    .uri(URI.create("http://localhost:8081/realms/car-dealership/protocol/openid-connect/token"))
+                    .header("Content-Type", "application/x-www-form-urlencoded")
+                    .POST(HttpRequest.BodyPublishers.ofString(
+                            "grant_type=password" +
+                                    "&client_id=car-service-client" +
+                                    "&username=adolphus_maggio" +
+                                    "&password=12345" +
+                                    "&client_secret=FK8CitAQtFcHzx2gcobPOMXZVjEaAbbA"))
+                    .build();
+            var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            return response.body().split("\"access_token\":\"")[1].split("\"")[0];
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Test
     void shouldCreate() {
+        String accessToken = getAccessToken();
         HttpHeaders headers = new HttpHeaders();
-        headers.set("user_role", Role.SYSTEM_ADMINISTRATOR.name());
+        headers.setBearerAuth(accessToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
         BodyDetailDTO dto = new BodyDetailDTO();
         dto.setName("Name");
         dto.setPrice(1000);
         dto.setColor("Color");
         dto.setType(BodyType.SEDAN.name());
-        HttpEntity<BodyDetailDTO> entity = new HttpEntity<>(dto, headers);
 
+        HttpEntity<BodyDetailDTO> entity = new HttpEntity<>(dto, headers);
         ResponseEntity<BodyDetailDTO> response = restTemplate.exchange(
                 "/api/body_details",
                 HttpMethod.POST,

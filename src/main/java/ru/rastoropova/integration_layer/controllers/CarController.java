@@ -1,12 +1,12 @@
 package ru.rastoropova.integration_layer.controllers;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.rastoropova.integration_layer.dto.CarDTO;
 import ru.rastoropova.integration_layer.mappers.CarMapper;
 import ru.rastoropova.service_layer.cars.CarFilter;
 import ru.rastoropova.service_layer.services.CarService;
-import ru.rastoropova.service_layer.users.Role;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,6 +18,7 @@ public class CarController {
     private CarMapper mapper;
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public List<CarDTO> getAll() {
         return service.viewCarList().stream()
                 .map(domain -> mapper.toDTO(domain))
@@ -25,11 +26,13 @@ public class CarController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public CarDTO getById(@PathVariable UUID id) {
         return mapper.toDTO(service.viewCar(id));
     }
 
     @GetMapping("/filter")
+    @PreAuthorize("isAuthenticated()")
     public List<CarDTO> getByFilter(@RequestParam(required = false) Integer price, @RequestParam(required = false) String brand,
                                     @RequestParam(required = false) UUID bodyId, @RequestParam(required = false) UUID engineId,
                                     @RequestParam(required = false) UUID gearboxId, @RequestParam(required = false) UUID interiorId,
@@ -49,6 +52,7 @@ public class CarController {
     }
 
     @GetMapping("/test-drive")
+    @PreAuthorize("isAuthenticated()")
     public List<CarDTO> getCarsForTestDrive() {
         return service.viewCarsForTestDrive().stream()
                 .map(domain -> mapper.toDTO(domain))
@@ -56,24 +60,29 @@ public class CarController {
     }
 
     @PostMapping
-    public CarDTO add(@RequestBody CarDTO dto, @RequestHeader("user_role") String role) {
-        service.addCarToSystem(Role.valueOf(role), mapper.toDomain(dto));
+    @PreAuthorize("hasAnyRole('WAREHOUSE_ADMINISTRATOR', 'SYSTEM_ADMINISTRATOR')")
+    public CarDTO add(@RequestBody CarDTO dto) {
+        service.addCarToSystem(mapper.toDomain(dto));
         return dto;
     }
 
     @PostMapping("/{id}/test-drive")
-    public CarDTO addTestDriveCar(@RequestBody CarDTO dto, @RequestHeader("user_role") String role) {
-        service.addTestDriveCar(Role.valueOf(role), mapper.toDomain(dto));
-        return dto;
+    @PreAuthorize("hasAnyRole('CAR_MANAGER', 'SYSTEM_ADMINISTRATOR')")
+    public CarDTO addTestDriveCar(@RequestBody CarDTO dto) {
+        var domain = mapper.toDomain(dto);
+        service.addTestDriveCar(domain);
+        return mapper.toDTO(domain);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable UUID id, @RequestHeader("user_role") String role) {
-        service.deleteCarFromSystem(Role.valueOf(role), id);
+    @PreAuthorize("hasRole('SYSTEM_ADMINISTRATOR')")
+    public void delete(@PathVariable UUID id) {
+        service.deleteCarFromSystem(id);
     }
 
     @DeleteMapping("/{id}/test-drive")
-    public void deleteTestDriveCar(@PathVariable UUID id, @RequestHeader("user_role") String role) {
-        service.deleteTestDriveCar(Role.valueOf(role), id);
+    @PreAuthorize("hasAnyRole('CAR_MANAGER', 'SYSTEM_ADMINISTRATOR')")
+    public void deleteTestDriveCar(@PathVariable UUID id) {
+        service.deleteTestDriveCar(id);
     }
 }

@@ -5,6 +5,7 @@ import java.util.Set;
 
 public enum TestDriveOrderStatus {
     COMPLETED(Set.of()),
+    CANCELLED(Set.of()),
     APPROVED(Set.of(COMPLETED)),
     DRAFTED(Set.of(APPROVED));
 

@@ -1,6 +1,9 @@
 package ru.rastoropova.integration_layer.controllers;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import ru.rastoropova.integration_layer.dto.CarPurchaseOrderDTO;
 import ru.rastoropova.integration_layer.dto.CarWithConfigurationPurchaseOrderDTO;
@@ -14,7 +17,6 @@ import ru.rastoropova.service_layer.orders.CarPurchaseOrderStatus;
 import ru.rastoropova.service_layer.orders.CarWithConfigurationPurchaseOrderStatus;
 import ru.rastoropova.service_layer.orders.TestDriveOrderStatus;
 import ru.rastoropova.service_layer.services.OrderService;
-import ru.rastoropova.service_layer.users.Role;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,54 +29,122 @@ public class OrderController {
     private CarWithConfigurationPurchaseOrderMapper carWithConfigurationOrderMapper;
     private TestDriveOrderMapper testDriveOrderMapper;
 
-    @GetMapping("/cars")
-    public List<CarPurchaseOrderDTO> getCarOrders(@RequestHeader("user_role") String role) {
-        return service.viewOrdersCars(Role.valueOf(role)).stream()
+    @GetMapping("/cars/all")
+    @PreAuthorize("hasAnyRole('CAR_MANAGER', 'SYSTEM_ADMINISTRATOR')")
+    public List<CarPurchaseOrderDTO> getCarOrders() {
+        return service.viewOrdersCars().stream()
                 .map(domain -> carOrderMapper.toDTO(domain))
                 .toList();
     }
 
-    @GetMapping("/cars-with-configuration")
-    public List<CarWithConfigurationPurchaseOrderDTO> getCarsWithConfigurationOrders(@RequestHeader("user_role") String role) {
-        return service.viewOrdersCarsWithConfiguration(Role.valueOf(role)).stream()
+    @GetMapping("/cars/my")
+    @PreAuthorize("isAuthenticated()")
+    public List<CarPurchaseOrderDTO> getMyCarOrders(@AuthenticationPrincipal Jwt jwt) {
+        UUID userId = UUID.fromString(jwt.getSubject());
+        return service.viewMyOrdersCars(userId).stream()
+                .map(domain -> carOrderMapper.toDTO(domain))
+                .toList();
+    }
+
+    @GetMapping("/cars-with-configuration/all")
+    @PreAuthorize("hasAnyRole('CAR_MANAGER', 'SYSTEM_ADMINISTRATOR')")
+    public List<CarWithConfigurationPurchaseOrderDTO> getCarsWithConfigurationOrders() {
+        return service.viewOrdersCarsWithConfiguration().stream()
                 .map(domain -> carWithConfigurationOrderMapper.toDTO(domain))
                 .toList();
     }
 
-    @GetMapping("/test-drive")
-    public List<TestDriveOrderDTO> getTestDriveOrders(@RequestHeader("user_role") String role) {
-        return service.viewTestDriveApplications(Role.valueOf(role)).stream()
+    @GetMapping("/cars-with-configuration/my")
+    @PreAuthorize("isAuthenticated()")
+    public List<CarWithConfigurationPurchaseOrderDTO> getMyCarsWithConfigurationOrders(@AuthenticationPrincipal Jwt jwt) {
+        UUID userId = UUID.fromString(jwt.getSubject());
+        return service.viewMyOrdersCarsWithConfiguration(userId).stream()
+                .map(domain -> carWithConfigurationOrderMapper.toDTO(domain))
+                .toList();
+    }
+
+    @GetMapping("/test-drive/all")
+    @PreAuthorize("hasAnyRole('CAR_MANAGER', 'SYSTEM_ADMINISTRATOR')")
+    public List<TestDriveOrderDTO> getTestDriveOrders() {
+        return service.viewTestDriveApplications().stream()
+                .map(domain -> testDriveOrderMapper.toDTO(domain))
+                .toList();
+    }
+
+    @GetMapping("/test-drive/my")
+    @PreAuthorize("isAuthenticated()")
+    public List<TestDriveOrderDTO> getMyTestDriveOrders(@AuthenticationPrincipal Jwt jwt) {
+        UUID userId = UUID.fromString(jwt.getSubject());
+        return service.viewMyTestDriveApplications(userId).stream()
                 .map(domain -> testDriveOrderMapper.toDTO(domain))
                 .toList();
     }
 
     @PostMapping("/cars")
-    public void orderCar(@RequestParam UUID carId, @RequestHeader("user_id") UUID id, @RequestHeader("user_role") String role) {
-        service.orderCar(Role.valueOf(role), id, carId);
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'SYSTEM_ADMINISTRATOR')")
+    public CarPurchaseOrderDTO orderCar(@RequestParam UUID carId, @AuthenticationPrincipal Jwt jwt) {
+        UUID customerId = UUID.fromString(jwt.getSubject());
+        var order = service.orderCar(customerId, carId);
+        return carOrderMapper.toDTO(order);
     }
 
     @PostMapping("/cars-with-configuration")
-    public void orderCarWithConfiguration(@RequestBody CarWithConfigurationOrderRequest request, @RequestHeader("user_id") UUID id, @RequestHeader("user_role") String role) {
-        service.orderCarWithConfiguration(Role.valueOf(role), id, request.getCarModelId(), request.getBodyId(), request.getEngineId(), request.getGearboxId(), request.getInteriorId(), request.getSteeringWheelId(), request.getWheelsId());
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'SYSTEM_ADMINISTRATOR')")
+    public CarWithConfigurationPurchaseOrderDTO orderCarWithConfiguration(@RequestBody CarWithConfigurationOrderRequest request, @AuthenticationPrincipal Jwt jwt) {
+        UUID customerId = UUID.fromString(jwt.getSubject());
+        var order = service.orderCarWithConfiguration(customerId, request.getCarModelId(),
+                request.getBodyId(), request.getEngineId(), request.getGearboxId(),
+                request.getInteriorId(), request.getSteeringWheelId(), request.getWheelsId());
+        return carWithConfigurationOrderMapper.toDTO(order);
     }
 
     @PostMapping("/test-drive")
-    public void signUpTestDrive(@RequestBody TestDriveOrderRequest request, @RequestHeader("user_id") UUID id, @RequestHeader("user_role") String role) {
-        service.signUpTestDrive(Role.valueOf(role), id, request.getCarId(), request.getDate(), request.getTime());
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'SYSTEM_ADMINISTRATOR')")
+    public TestDriveOrderDTO signUpTestDrive(@RequestBody TestDriveOrderRequest request, @AuthenticationPrincipal Jwt jwt) {
+        UUID customerId = UUID.fromString(jwt.getSubject());
+        var order = service.signUpTestDrive(customerId, request.getCarId(), request.getDate(), request.getTime());
+        return testDriveOrderMapper.toDTO(order);
     }
 
     @PutMapping("/cars/{orderId}/status")
-    public void updateCarOrderStatus(@PathVariable UUID orderId, @RequestParam String status) {
-        service.changeCarPurchaseOrderStatus(orderId, CarPurchaseOrderStatus.valueOf(status));
+    @PreAuthorize("hasAnyRole('CAR_MANAGER', 'SYSTEM_ADMINISTRATOR')")
+    public CarPurchaseOrderDTO updateCarOrderStatus(@PathVariable UUID orderId, @RequestParam String status) {
+        var order = service.changeCarPurchaseOrderStatus(orderId, CarPurchaseOrderStatus.valueOf(status));
+        return carOrderMapper.toDTO(order);
+    }
+
+    @PutMapping("/cars/{orderId}/cancel")
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'SYSTEM_ADMINISTRATOR')")
+    public CarPurchaseOrderDTO cancelMyCarPurchaseOrderStatus(@PathVariable UUID orderId) {
+        var order = service.changeCarPurchaseOrderStatus(orderId, CarPurchaseOrderStatus.CANCELLED);
+        return carOrderMapper.toDTO(order);
     }
 
     @PutMapping("/cars-with-configuration/{orderId}/status")
-    public void updateCarWithConfigOrderStatus(@PathVariable UUID orderId, @RequestParam String status) {
-        service.changeCarWithConfigurationPurchaseOrderStatus(orderId, CarWithConfigurationPurchaseOrderStatus.valueOf(status));
+    @PreAuthorize("hasAnyRole('CAR_MANAGER', 'SYSTEM_ADMINISTRATOR')")
+    public CarWithConfigurationPurchaseOrderDTO updateCarWithConfigOrderStatus(@PathVariable UUID orderId, @RequestParam String status) {
+        var order = service.changeCarWithConfigurationPurchaseOrderStatus(orderId, CarWithConfigurationPurchaseOrderStatus.valueOf(status));
+        return carWithConfigurationOrderMapper.toDTO(order);
+    }
+
+    @PutMapping("/cars-with-configuration/{orderId}/cancel")
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'SYSTEM_ADMINISTRATOR')")
+    public CarWithConfigurationPurchaseOrderDTO cancelMyCarWithConfigurationPurchaseOrderStatus(@PathVariable UUID orderId) {
+        var order = service.changeCarWithConfigurationPurchaseOrderStatus(orderId, CarWithConfigurationPurchaseOrderStatus.CANCELLED);
+        return carWithConfigurationOrderMapper.toDTO(order);
     }
 
     @PutMapping("/test-drive/{orderId}/status")
-    public void updateTestDriveOrderStatus(@PathVariable UUID orderId, @RequestParam String status) {
-        service.changeTestDriveOrderStatus(orderId, TestDriveOrderStatus.valueOf(status));
+    @PreAuthorize("hasAnyRole('CAR_MANAGER', 'SYSTEM_ADMINISTRATOR')")
+    public TestDriveOrderDTO updateTestDriveOrderStatus(@PathVariable UUID orderId, @RequestParam String status) {
+        var order = service.changeTestDriveOrderStatus(orderId, TestDriveOrderStatus.valueOf(status));
+        return testDriveOrderMapper.toDTO(order);
+    }
+
+    @PutMapping("/test-drive/{orderId}/cancel")
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'SYSTEM_ADMINISTRATOR')")
+    public TestDriveOrderDTO cancelMyTestDriveOrderStatus(@PathVariable UUID orderId) {
+        var order = service.changeTestDriveOrderStatus(orderId, TestDriveOrderStatus.CANCELLED);
+        return testDriveOrderMapper.toDTO(order);
     }
 }

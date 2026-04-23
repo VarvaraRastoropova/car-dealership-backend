@@ -17,8 +17,9 @@ public class WheelsDetailRepositoryAdapter implements WheelsDetailRepository {
     private WheelsDetailJpaRepository jpaRepository;
     private WheelsDetailEntityMapper mapper;
 
-    public void save(WheelsDetail detail) {
-        jpaRepository.save(mapper.toEntity(detail));
+    public WheelsDetail save(WheelsDetail detail) {
+        WheelsDetailEntity saved = jpaRepository.save(mapper.toEntity(detail));
+        return mapper.toDomain(saved);
     }
 
     public WheelsDetail find(UUID id) {

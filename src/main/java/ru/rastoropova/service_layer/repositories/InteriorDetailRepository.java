@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface InteriorDetailRepository {
-    void save(InteriorDetail detail);
+    InteriorDetail save(InteriorDetail detail);
     InteriorDetail find(UUID id);
     List<InteriorDetail> findAll();
     void update(InteriorDetail detail);

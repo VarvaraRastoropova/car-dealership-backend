@@ -5,9 +5,10 @@ import java.util.List;
 import java.util.UUID;
 
 public interface TestDriveOrderRepository {
-    void save(TestDriveOrder order);
+    TestDriveOrder save(TestDriveOrder order);
     TestDriveOrder find(UUID id);
     List<TestDriveOrder> findAll();
+    List<TestDriveOrder> findByUserId(UUID userId);
     void update(TestDriveOrder order);
     void delete(UUID id);
 }

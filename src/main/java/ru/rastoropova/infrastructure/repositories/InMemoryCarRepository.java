@@ -8,7 +8,10 @@ import java.util.*;
 public class InMemoryCarRepository implements CarRepository {
     private Map<UUID, Car> storage = new HashMap<>();
 
-    public void save(Car car) { storage.put(car.getId(), car); }
+    public Car save(Car car) {
+        storage.put(car.getId(), car);
+        return car;
+    }
 
     public Car find(UUID id) { return storage.get(id); }
 

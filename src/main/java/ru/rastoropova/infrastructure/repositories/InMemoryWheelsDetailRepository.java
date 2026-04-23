@@ -8,8 +8,9 @@ import java.util.*;
 public class InMemoryWheelsDetailRepository implements WheelsDetailRepository {
     private Map<UUID, WheelsDetail> storage = new HashMap<>();
 
-    public void save(WheelsDetail detail) {
+    public WheelsDetail save(WheelsDetail detail) {
         storage.put(detail.getId(), detail);
+        return detail;
     }
 
     public WheelsDetail find(UUID id) {

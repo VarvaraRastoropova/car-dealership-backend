@@ -17,8 +17,9 @@ public class InteriorDetailRepositoryAdapter implements InteriorDetailRepository
     private InteriorDetailJpaRepository jpaRepository;
     private InteriorDetailEntityMapper mapper;
 
-    public void save(InteriorDetail detail) {
-        jpaRepository.save(mapper.toEntity(detail));
+    public InteriorDetail save(InteriorDetail detail) {
+        InteriorDetailEntity saved = jpaRepository.save(mapper.toEntity(detail));
+        return mapper.toDomain(saved);
     }
 
     public InteriorDetail find(UUID id) {

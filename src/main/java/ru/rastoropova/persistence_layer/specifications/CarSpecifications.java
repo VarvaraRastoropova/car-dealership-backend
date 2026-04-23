@@ -11,7 +11,7 @@ public class CarSpecifications {
         return (root, criteriaQuery, criteriaBuilder) -> {
             var predicate = criteriaBuilder.conjunction();
             if (filter.getPrice() != null && filter.getPrice() != 0) {
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("model").get("basePrice"), filter.getPrice()));
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.lessThanOrEqualTo(root.get("model").get("basePrice"), filter.getPrice()));
             }
             if (filter.getBrand() != null) {
                 predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("model").get("brand"), filter.getBrand()));

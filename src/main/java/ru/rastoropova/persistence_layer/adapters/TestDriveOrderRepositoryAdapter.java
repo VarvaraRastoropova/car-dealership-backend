@@ -17,8 +17,9 @@ public class TestDriveOrderRepositoryAdapter implements TestDriveOrderRepository
     private TestDriveOrderJpaRepository jpaRepository;
     private TestDriveOrderEntityMapper mapper;
 
-    public void save(TestDriveOrder order) {
-        jpaRepository.save(mapper.toEntity(order));
+    public TestDriveOrder save(TestDriveOrder order) {
+        TestDriveOrderEntity saved = jpaRepository.save(mapper.toEntity(order));
+        return mapper.toDomain(saved);
     }
 
     public TestDriveOrder find(UUID id) {
@@ -30,6 +31,13 @@ public class TestDriveOrderRepositoryAdapter implements TestDriveOrderRepository
 
     public List<TestDriveOrder> findAll() {
         return jpaRepository.findAll().stream()
+                .filter(entity -> !entity.isRemoved())
+                .map(entity -> mapper.toDomain(entity))
+                .toList();
+    }
+
+    public List<TestDriveOrder> findByUserId(UUID userId) {
+        return jpaRepository.findByCustomerId(userId).stream()
                 .filter(entity -> !entity.isRemoved())
                 .map(entity -> mapper.toDomain(entity))
                 .toList();

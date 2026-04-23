@@ -8,3 +8,8 @@ spring:
     enabled: true
     parameters:
       SEED_COUNT: 5
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081/realms/car-dealership

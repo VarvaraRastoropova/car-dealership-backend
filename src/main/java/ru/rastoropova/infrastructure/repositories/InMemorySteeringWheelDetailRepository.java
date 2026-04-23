@@ -8,8 +8,9 @@ import java.util.*;
 public class InMemorySteeringWheelDetailRepository implements SteeringWheelDetailRepository {
     private Map<UUID, SteeringWheelDetail> storage = new HashMap<>();
 
-    public void save(SteeringWheelDetail detail) {
+    public SteeringWheelDetail save(SteeringWheelDetail detail) {
         storage.put(detail.getId(), detail);
+        return detail;
     }
 
     public SteeringWheelDetail find(UUID id) {

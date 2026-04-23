@@ -21,8 +21,9 @@ public class CarRepositoryAdapter implements CarRepository {
     private CarEntityMapper mapper;
     private CarSpecifications carSpecifications;
 
-    public void save(Car car) {
-        jpaRepository.save(mapper.toEntity(car));
+    public Car save(Car car) {
+        CarEntity saved = jpaRepository.save(mapper.toEntity(car));
+        return mapper.toDomain(saved);
     }
 
     public Car find(UUID id) {

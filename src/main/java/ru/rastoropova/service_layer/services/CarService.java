@@ -7,7 +7,6 @@ import ru.rastoropova.service_layer.cars.CarFilter;
 import ru.rastoropova.service_layer.exceptions.DomainValidationException;
 import ru.rastoropova.service_layer.exceptions.EntityNotFoundException;
 import ru.rastoropova.service_layer.repositories.CarRepository;
-import ru.rastoropova.service_layer.users.Role;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,19 +30,13 @@ public class CarService {
         return carRepository.findByFilter(filter);
     }
 
-    public void addTestDriveCar(Role userRole, Car car) {
-        if (userRole != Role.CAR_MANAGER && userRole != Role.SYSTEM_ADMINISTRATOR) {
-            throw new DomainValidationException("Error: You do not have sufficient permissions to perform this operation.");
-        }
+    public void addTestDriveCar(Car car) {
         if (!car.isAvailableForTestDrive()) {
             car.setAvailabilityForTestDrive(true);
         }
     }
 
-    public void deleteTestDriveCar(Role userRole, UUID id) {
-        if (userRole != Role.CAR_MANAGER && userRole != Role.SYSTEM_ADMINISTRATOR) {
-            throw new DomainValidationException("Error: You do not have sufficient permissions to perform this operation.");
-        }
+    public void deleteTestDriveCar(UUID id) {
         Car car = carRepository.find(id);
         if (car == null) {
             throw new EntityNotFoundException("Error: Car not found.");
@@ -57,20 +50,14 @@ public class CarService {
         return carRepository.findAll().stream().filter(car -> car.isAvailableForTestDrive()).toList();
     }
 
-    public void addCarToSystem(Role userRole, Car car) {
-        if (userRole != Role.WAREHOUSE_ADMINISTRATOR && userRole != Role.SYSTEM_ADMINISTRATOR) {
-            throw new DomainValidationException("Error: You do not have sufficient permissions to perform this operation.");
-        }
+    public Car addCarToSystem(Car car) {
         if (car.getId() != null && carRepository.find(car.getId()) != null) {
             throw new DomainValidationException("Error: Car with id " + car.getId() + " already exists.");
         }
-        carRepository.save(car);
+        return carRepository.save(car);
     }
 
-    public void deleteCarFromSystem(Role userRole, UUID id) {
-        if (userRole != Role.SYSTEM_ADMINISTRATOR) {
-            throw new DomainValidationException("Error: You do not have sufficient permissions to perform this operation.");
-        };
+    public void deleteCarFromSystem(UUID id) {
         if (carRepository.find(id) == null) {
             throw new EntityNotFoundException("Error: Car not found.");
         }

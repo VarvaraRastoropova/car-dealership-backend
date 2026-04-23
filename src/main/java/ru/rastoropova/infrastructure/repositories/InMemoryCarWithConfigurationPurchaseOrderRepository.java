@@ -8,8 +8,9 @@ import java.util.*;
 public class InMemoryCarWithConfigurationPurchaseOrderRepository implements CarWithConfigurationPurchaseOrderRepository {
     private Map<UUID, CarWithConfigurationPurchaseOrder> storage = new HashMap<>();
 
-    public void save(CarWithConfigurationPurchaseOrder order) {
+    public CarWithConfigurationPurchaseOrder save(CarWithConfigurationPurchaseOrder order) {
         storage.put(order.getId(), order);
+        return order;
     }
 
     public CarWithConfigurationPurchaseOrder find(UUID id) {
@@ -18,6 +19,10 @@ public class InMemoryCarWithConfigurationPurchaseOrderRepository implements CarW
 
     public List<CarWithConfigurationPurchaseOrder> findAll() {
         return new ArrayList<>(storage.values());
+    }
+
+    public List<CarWithConfigurationPurchaseOrder> findByUserId(UUID userId) {
+        return storage.values().stream().filter(order -> order.getCustomerId().equals(userId)).toList();
     }
 
     public void update(CarWithConfigurationPurchaseOrder order) {

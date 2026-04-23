@@ -8,8 +8,9 @@ import java.util.*;
 public class InMemoryBodyDetailRepository implements BodyDetailRepository {
     private Map<UUID, BodyDetail> storage = new HashMap<>();
 
-    public void save(BodyDetail detail) {
+    public BodyDetail save(BodyDetail detail) {
         storage.put(detail.getId(), detail);
+        return detail;
     }
 
     public BodyDetail find(UUID id) { return storage.get(id); }

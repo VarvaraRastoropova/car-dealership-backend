@@ -1,6 +1,7 @@
 package ru.rastoropova.integration_layer.controllers;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.rastoropova.integration_layer.dto.GearboxDetailDTO;
 import ru.rastoropova.integration_layer.mappers.GearboxDetailMapper;
@@ -17,25 +18,30 @@ public class GearboxDetailController {
     private GearboxDetailMapper mapper;
 
     @GetMapping
-    public List<GearboxDetailDTO> getAll(@RequestHeader("user_role") String role) {
-        return service.viewGearboxDetailList(Role.valueOf(role)).stream()
+    @PreAuthorize("hasAnyRole('WAREHOUSE_ADMINISTRATOR', 'SYSTEM_ADMINISTRATOR')")
+    public List<GearboxDetailDTO> getAll() {
+        return service.viewGearboxDetailList().stream()
                 .map(domain -> mapper.toDTO(domain))
                 .toList();
     }
 
     @GetMapping("/{id}")
-    public GearboxDetailDTO getById(@PathVariable UUID id, @RequestHeader("user_role") String role) {
-        return mapper.toDTO(service.viewGearboxDetail(Role.valueOf(role), id));
+    @PreAuthorize("hasAnyRole('WAREHOUSE_ADMINISTRATOR', 'SYSTEM_ADMINISTRATOR')")
+    public GearboxDetailDTO getById(@PathVariable UUID id) {
+        return mapper.toDTO(service.viewGearboxDetail(id));
     }
 
     @PostMapping
-    public GearboxDetailDTO add(@RequestBody GearboxDetailDTO dto, @RequestHeader("user_role") String role) {
-        service.addGearboxDetailToSystem(Role.valueOf(role), mapper.toDomain(dto));
-        return dto;
+    @PreAuthorize("hasAnyRole('WAREHOUSE_ADMINISTRATOR', 'SYSTEM_ADMINISTRATOR')")
+    public GearboxDetailDTO add(@RequestBody GearboxDetailDTO dto) {
+        var domain = mapper.toDomain(dto);
+        service.addGearboxDetailToSystem(domain);
+        return mapper.toDTO(domain);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable UUID id, @RequestHeader("user_role") String role) {
-        service.deleteGearboxDetailFromSystem(Role.valueOf(role), id);
+    @PreAuthorize("hasRole('SYSTEM_ADMINISTRATOR')")
+    public void delete(@PathVariable UUID id) {
+        service.deleteGearboxDetailFromSystem(id);
     }
 }

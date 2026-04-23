@@ -5,9 +5,10 @@ import java.util.List;
 import java.util.UUID;
 
 public interface CarWithConfigurationPurchaseOrderRepository {
-    void save(CarWithConfigurationPurchaseOrder order);
+    CarWithConfigurationPurchaseOrder save(CarWithConfigurationPurchaseOrder order);
     CarWithConfigurationPurchaseOrder find(UUID id);
     List<CarWithConfigurationPurchaseOrder> findAll();
+    List<CarWithConfigurationPurchaseOrder> findByUserId(UUID userId);
     void update(CarWithConfigurationPurchaseOrder order);
     void delete(UUID id);
 }

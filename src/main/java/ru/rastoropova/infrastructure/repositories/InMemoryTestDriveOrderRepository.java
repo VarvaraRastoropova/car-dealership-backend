@@ -8,8 +8,9 @@ import java.util.*;
 public class InMemoryTestDriveOrderRepository implements TestDriveOrderRepository {
     private Map<UUID, TestDriveOrder> storage = new HashMap<>();
 
-    public void save(TestDriveOrder order) {
+    public TestDriveOrder save(TestDriveOrder order) {
         storage.put(order.getId(), order);
+        return order;
     }
 
     public TestDriveOrder find(UUID id) {
@@ -18,6 +19,10 @@ public class InMemoryTestDriveOrderRepository implements TestDriveOrderRepositor
 
     public List<TestDriveOrder> findAll() {
         return new ArrayList<>(storage.values());
+    }
+
+    public List<TestDriveOrder> findByUserId(UUID userId) {
+        return storage.values().stream().filter(order -> order.getCustomerId().equals(userId)).toList();
     }
 
     public void update(TestDriveOrder order) {

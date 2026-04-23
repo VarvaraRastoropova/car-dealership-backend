@@ -17,8 +17,9 @@ public class GearboxDetailRepositoryAdapter implements GearboxDetailRepository {
     private GearboxDetailJpaRepository jpaRepository;
     private GearboxDetailEntityMapper mapper;
 
-    public void save(GearboxDetail detail) {
-        jpaRepository.save(mapper.toEntity(detail));
+    public GearboxDetail save(GearboxDetail detail) {
+        GearboxDetailEntity saved = jpaRepository.save(mapper.toEntity(detail));
+        return mapper.toDomain(saved);
     }
 
     public GearboxDetail find(UUID id) {

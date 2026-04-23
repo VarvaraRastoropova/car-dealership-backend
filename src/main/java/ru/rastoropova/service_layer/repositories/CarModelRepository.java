@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface CarModelRepository {
-    void save(CarModel model);
+    CarModel save(CarModel model);
     CarModel find(UUID id);
     List<CarModel> findAll();
     void update(CarModel model);

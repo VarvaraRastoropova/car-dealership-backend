@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface GearboxDetailRepository {
-    void save(GearboxDetail detail);
+    GearboxDetail save(GearboxDetail detail);
     GearboxDetail find(UUID id);
     List<GearboxDetail> findAll();
     void update(GearboxDetail detail);

@@ -17,8 +17,9 @@ public class BodyDetailRepositoryAdapter implements BodyDetailRepository {
     private BodyDetailJpaRepository jpaRepository;
     private BodyDetailEntityMapper mapper;
 
-    public void save(BodyDetail detail) {
-        jpaRepository.save(mapper.toEntity(detail));
+    public BodyDetail save(BodyDetail detail) {
+        BodyDetailEntity saved = jpaRepository.save(mapper.toEntity(detail));
+        return mapper.toDomain(saved);
     }
 
     public BodyDetail find(UUID id) {

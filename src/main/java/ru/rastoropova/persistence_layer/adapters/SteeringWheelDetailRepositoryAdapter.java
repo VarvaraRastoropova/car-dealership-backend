@@ -17,8 +17,9 @@ public class SteeringWheelDetailRepositoryAdapter implements SteeringWheelDetail
     private SteeringWheelDetailJpaRepository jpaRepository;
     private SteeringWheelDetailEntityMapper mapper;
 
-    public void save(SteeringWheelDetail detail) {
-        jpaRepository.save(mapper.toEntity(detail));
+    public SteeringWheelDetail save(SteeringWheelDetail detail) {
+        SteeringWheelDetailEntity saved = jpaRepository.save(mapper.toEntity(detail));
+        return mapper.toDomain(saved);
     }
 
     public SteeringWheelDetail find(UUID id) {

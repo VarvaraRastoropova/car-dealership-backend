@@ -17,8 +17,9 @@ public class CarPurchaseOrderRepositoryAdapter implements CarPurchaseOrderReposi
     private CarPurchaseOrderJpaRepository jpaRepository;
     private CarPurchaseOrderEntityMapper mapper;
 
-    public void save(CarPurchaseOrder order) {
-        jpaRepository.save(mapper.toEntity(order));
+    public CarPurchaseOrder save(CarPurchaseOrder order) {
+        CarPurchaseOrderEntity saved = jpaRepository.save(mapper.toEntity(order));
+        return mapper.toDomain(saved);
     }
 
     public CarPurchaseOrder find(UUID id) {
@@ -30,6 +31,13 @@ public class CarPurchaseOrderRepositoryAdapter implements CarPurchaseOrderReposi
 
     public List<CarPurchaseOrder> findAll() {
         return jpaRepository.findAll().stream()
+                .filter(entity -> !entity.isRemoved())
+                .map(entity -> mapper.toDomain(entity))
+                .toList();
+    }
+
+    public List<CarPurchaseOrder> findByUserId(UUID userId) {
+        return jpaRepository.findByCustomerId(userId).stream()
                 .filter(entity -> !entity.isRemoved())
                 .map(entity -> mapper.toDomain(entity))
                 .toList();

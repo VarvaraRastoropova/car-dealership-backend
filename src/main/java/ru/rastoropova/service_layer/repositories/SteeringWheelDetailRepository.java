@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface SteeringWheelDetailRepository {
-    void save(SteeringWheelDetail detail);
+    SteeringWheelDetail save(SteeringWheelDetail detail);
     SteeringWheelDetail find(UUID id);
     List<SteeringWheelDetail> findAll();
     void update(SteeringWheelDetail detail);
