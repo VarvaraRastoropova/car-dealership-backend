@@ -8,6 +8,6 @@ public interface CarModelRepository {
     CarModel save(CarModel model);
     CarModel find(UUID id);
     List<CarModel> findAll();
-    void update(CarModel model);
+    CarModel update(CarModel model);
     void delete(UUID id);
 }

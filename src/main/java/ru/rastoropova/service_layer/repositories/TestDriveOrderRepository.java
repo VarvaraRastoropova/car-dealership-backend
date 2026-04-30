@@ -9,6 +9,6 @@ public interface TestDriveOrderRepository {
     TestDriveOrder find(UUID id);
     List<TestDriveOrder> findAll();
     List<TestDriveOrder> findByUserId(UUID userId);
-    void update(TestDriveOrder order);
+    TestDriveOrder update(TestDriveOrder order);
     void delete(UUID id);
 }

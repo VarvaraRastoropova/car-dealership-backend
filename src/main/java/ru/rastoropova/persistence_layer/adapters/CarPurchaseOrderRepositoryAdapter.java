@@ -43,7 +43,7 @@ public class CarPurchaseOrderRepositoryAdapter implements CarPurchaseOrderReposi
                 .toList();
     }
 
-    public void update(CarPurchaseOrder order) {
+    public CarPurchaseOrder update(CarPurchaseOrder order) {
         CarPurchaseOrderEntity entity = jpaRepository.findById(order.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Error: CarPurchaseOrder not found"));
         CarPurchaseOrderEntity updated = mapper.toEntity(order);
@@ -51,7 +51,7 @@ public class CarPurchaseOrderRepositoryAdapter implements CarPurchaseOrderReposi
         updated.setCreatedAt(entity.getCreatedAt());
         updated.setRemoved(entity.isRemoved());
         updated.setId(entity.getId());
-        jpaRepository.save(updated);
+        return mapper.toDomain(jpaRepository.save(updated));
     }
 
     public void delete(UUID id) {

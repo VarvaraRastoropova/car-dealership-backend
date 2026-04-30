@@ -10,6 +10,6 @@ public interface UserRepository {
     User find(UUID id);
     List<User> findAll();
     List<User> findAllByRole(Role role);
-    void update(User car);
+    User update(User car);
     void delete(UUID id);
 }

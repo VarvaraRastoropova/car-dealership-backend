@@ -8,6 +8,6 @@ public interface BodyDetailRepository {
     BodyDetail save(BodyDetail detail);
     BodyDetail find(UUID id);
     List<BodyDetail> findAll();
-    void update(BodyDetail detail);
+    BodyDetail update(BodyDetail detail);
     void delete(UUID id);
 }

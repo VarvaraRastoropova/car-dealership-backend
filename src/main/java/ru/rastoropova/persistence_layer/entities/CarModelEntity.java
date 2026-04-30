@@ -3,7 +3,7 @@ package ru.rastoropova.persistence_layer.entities;
 import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "car_models")
@@ -27,40 +27,40 @@ public class CarModelEntity extends BaseEntity {
             name = "car_model_bodies",
             joinColumns = @JoinColumn(name = "car_model_id"),
             inverseJoinColumns = @JoinColumn(name = "body_id"))
-    private List<BodyDetailEntity> availableBodies;
+    private Set<BodyDetailEntity> availableBodies;
 
     @ManyToMany
     @JoinTable(
             name = "car_model_engines",
             joinColumns = @JoinColumn(name = "car_model_id"),
             inverseJoinColumns = @JoinColumn(name = "engine_id"))
-    private List<EngineDetailEntity> availableEngines;
+    private Set<EngineDetailEntity> availableEngines;
 
     @ManyToMany
     @JoinTable(
             name = "car_model_gearboxes",
             joinColumns = @JoinColumn(name = "car_model_id"),
             inverseJoinColumns = @JoinColumn(name = "gearbox_id"))
-    private List<GearboxDetailEntity> availableGearboxes;
+    private Set<GearboxDetailEntity> availableGearboxes;
 
     @ManyToMany
     @JoinTable(
             name = "car_model_interiors",
             joinColumns = @JoinColumn(name = "car_model_id"),
             inverseJoinColumns = @JoinColumn(name = "interior_id"))
-    private List<InteriorDetailEntity> availableInteriors;
+    private Set<InteriorDetailEntity> availableInteriors;
 
     @ManyToMany
     @JoinTable(
             name = "car_model_steering_wheels",
             joinColumns = @JoinColumn(name = "car_model_id"),
             inverseJoinColumns = @JoinColumn(name = "steering_wheel_id"))
-    private List<SteeringWheelDetailEntity> availableSteeringWheels;
+    private Set<SteeringWheelDetailEntity> availableSteeringWheels;
 
     @ManyToMany
     @JoinTable(
             name = "car_model_wheels",
             joinColumns = @JoinColumn(name = "car_model_id"),
             inverseJoinColumns = @JoinColumn(name = "wheels_id"))
-    private List<WheelsDetailEntity> availableWheels;
+    private Set<WheelsDetailEntity> availableWheels;
 }

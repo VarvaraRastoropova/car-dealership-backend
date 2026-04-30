@@ -36,7 +36,7 @@ public class GearboxDetailRepositoryAdapter implements GearboxDetailRepository {
                 .toList();
     }
 
-    public void update(GearboxDetail detail) {
+    public GearboxDetail update(GearboxDetail detail) {
         GearboxDetailEntity entity = jpaRepository.findById(detail.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Error: GearboxDetail not found"));
         GearboxDetailEntity updated = mapper.toEntity(detail);
@@ -44,7 +44,7 @@ public class GearboxDetailRepositoryAdapter implements GearboxDetailRepository {
         updated.setCreatedAt(entity.getCreatedAt());
         updated.setRemoved(entity.isRemoved());
         updated.setId(entity.getId());
-        jpaRepository.save(updated);
+        return mapper.toDomain(jpaRepository.save(updated));
     }
 
     public void delete(UUID id) {

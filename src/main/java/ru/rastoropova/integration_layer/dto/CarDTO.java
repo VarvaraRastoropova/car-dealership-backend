@@ -7,11 +7,5 @@ import java.util.UUID;
 public class CarDTO {
     private UUID id;
     private UUID modelId;
-    private UUID bodyId;
-    private UUID engineId;
-    private UUID gearboxId;
-    private UUID interiorId;
-    private UUID steeringWheelId;
-    private UUID wheelsId;
     private boolean isAvailableForTestDrive;
 }

@@ -36,7 +36,7 @@ public class SteeringWheelDetailRepositoryAdapter implements SteeringWheelDetail
                 .toList();
     }
 
-    public void update(SteeringWheelDetail detail) {
+    public SteeringWheelDetail update(SteeringWheelDetail detail) {
         SteeringWheelDetailEntity entity = jpaRepository.findById(detail.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Error: SteeringWheelDetail not found"));
         SteeringWheelDetailEntity updated = mapper.toEntity(detail);
@@ -44,7 +44,7 @@ public class SteeringWheelDetailRepositoryAdapter implements SteeringWheelDetail
         updated.setCreatedAt(entity.getCreatedAt());
         updated.setRemoved(entity.isRemoved());
         updated.setId(entity.getId());
-        jpaRepository.save(updated);
+        return mapper.toDomain(jpaRepository.save(updated));
     }
 
     public void delete(UUID id) {

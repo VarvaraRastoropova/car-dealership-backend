@@ -21,10 +21,11 @@ public class InMemoryInteriorDetailRepository implements InteriorDetailRepositor
         return new ArrayList<>(storage.values());
     }
 
-    public void update(InteriorDetail detail) {
+    public InteriorDetail update(InteriorDetail detail) {
         if (storage.containsKey(detail.getId())) {
             storage.put(detail.getId(), detail);
         }
+        return detail;
     }
 
     public void delete(UUID id) { storage.remove(id); }

@@ -8,6 +8,6 @@ public interface WheelsDetailRepository {
     WheelsDetail save(WheelsDetail detail);
     WheelsDetail find(UUID id);
     List<WheelsDetail> findAll();
-    void update(WheelsDetail detail);
+    WheelsDetail update(WheelsDetail detail);
     void delete(UUID id);
 }

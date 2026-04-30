@@ -21,10 +21,11 @@ public class InMemoryEngineDetailRepository implements EngineDetailRepository {
         return new ArrayList<>(storage.values());
     }
 
-    public void update(EngineDetail detail) {
+    public EngineDetail update(EngineDetail detail) {
         if (storage.containsKey(detail.getId())) {
             storage.put(detail.getId(), detail);
         }
+        return detail;
     }
 
     public void delete(UUID id) { storage.remove(id); }

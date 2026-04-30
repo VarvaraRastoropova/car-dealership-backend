@@ -36,7 +36,7 @@ public class EngineDetailRepositoryAdapter implements EngineDetailRepository {
                 .toList();
     }
 
-    public void update(EngineDetail detail) {
+    public EngineDetail update(EngineDetail detail) {
         EngineDetailEntity entity = jpaRepository.findById(detail.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Error: EngineDetail not found"));
         EngineDetailEntity updated = mapper.toEntity(detail);
@@ -44,7 +44,7 @@ public class EngineDetailRepositoryAdapter implements EngineDetailRepository {
         updated.setCreatedAt(entity.getCreatedAt());
         updated.setRemoved(entity.isRemoved());
         updated.setId(entity.getId());
-        jpaRepository.save(updated);
+        return mapper.toDomain(jpaRepository.save(updated));
     }
 
     public void delete(UUID id) {

@@ -36,7 +36,7 @@ public class WheelsDetailRepositoryAdapter implements WheelsDetailRepository {
                 .toList();
     }
 
-    public void update(WheelsDetail detail) {
+    public WheelsDetail update(WheelsDetail detail) {
         WheelsDetailEntity entity = jpaRepository.findById(detail.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Error: WheelsDetail not found"));
         WheelsDetailEntity updated = mapper.toEntity(detail);
@@ -44,7 +44,7 @@ public class WheelsDetailRepositoryAdapter implements WheelsDetailRepository {
         updated.setCreatedAt(entity.getCreatedAt());
         updated.setRemoved(entity.isRemoved());
         updated.setId(entity.getId());
-        jpaRepository.save(updated);
+        return mapper.toDomain(jpaRepository.save(updated));
     }
 
     public void delete(UUID id) {

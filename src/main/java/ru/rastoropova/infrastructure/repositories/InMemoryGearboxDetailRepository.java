@@ -21,10 +21,11 @@ public class InMemoryGearboxDetailRepository implements GearboxDetailRepository 
         return new ArrayList<>(storage.values());
     }
 
-    public void update(GearboxDetail detail) {
+    public GearboxDetail update(GearboxDetail detail) {
         if (storage.containsKey(detail.getId())) {
             storage.put(detail.getId(), detail);
         }
+        return detail;
     }
 
     public void delete(UUID id) { storage.remove(id); }

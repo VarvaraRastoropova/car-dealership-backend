@@ -43,7 +43,7 @@ public class TestDriveOrderRepositoryAdapter implements TestDriveOrderRepository
                 .toList();
     }
 
-    public void update(TestDriveOrder order) {
+    public TestDriveOrder update(TestDriveOrder order) {
         TestDriveOrderEntity entity = jpaRepository.findById(order.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Error: TestDriveOrder not found"));
         TestDriveOrderEntity updated = mapper.toEntity(order);
@@ -51,7 +51,7 @@ public class TestDriveOrderRepositoryAdapter implements TestDriveOrderRepository
         updated.setCreatedAt(entity.getCreatedAt());
         updated.setRemoved(entity.isRemoved());
         updated.setId(entity.getId());
-        jpaRepository.save(updated);
+        return mapper.toDomain(jpaRepository.save(updated));
     }
 
     public void delete(UUID id) {

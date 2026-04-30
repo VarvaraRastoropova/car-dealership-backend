@@ -9,6 +9,6 @@ public interface CarPurchaseOrderRepository {
     CarPurchaseOrder find(UUID id);
     List<CarPurchaseOrder> findAll();
     List<CarPurchaseOrder> findByUserId(UUID userId);
-    void update(CarPurchaseOrder order);
+    CarPurchaseOrder update(CarPurchaseOrder order);
     void delete(UUID id);
 }

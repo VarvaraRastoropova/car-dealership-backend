@@ -25,10 +25,11 @@ public class InMemoryCarWithConfigurationPurchaseOrderRepository implements CarW
         return storage.values().stream().filter(order -> order.getCustomerId().equals(userId)).toList();
     }
 
-    public void update(CarWithConfigurationPurchaseOrder order) {
+    public CarWithConfigurationPurchaseOrder update(CarWithConfigurationPurchaseOrder order) {
         if (storage.containsKey(order.getId())) {
             storage.put(order.getId(), order);
         }
+        return order;
     }
 
     public void delete(UUID id) { storage.remove(id); }

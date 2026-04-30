@@ -21,10 +21,11 @@ public class InMemorySteeringWheelDetailRepository implements SteeringWheelDetai
         return new ArrayList<>(storage.values());
     }
 
-    public void update(SteeringWheelDetail detail) {
+    public SteeringWheelDetail update(SteeringWheelDetail detail) {
         if (storage.containsKey(detail.getId())) {
             storage.put(detail.getId(), detail);
         }
+        return detail;
     }
 
     public void delete(UUID id) { storage.remove(id); }

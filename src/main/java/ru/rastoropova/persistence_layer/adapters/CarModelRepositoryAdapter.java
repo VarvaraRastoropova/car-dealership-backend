@@ -11,7 +11,6 @@ import ru.rastoropova.service_layer.repositories.CarModelRepository;
 import java.util.List;
 import java.util.UUID;
 
-
 @Repository
 @AllArgsConstructor
 public class CarModelRepositoryAdapter implements CarModelRepository {
@@ -37,7 +36,7 @@ public class CarModelRepositoryAdapter implements CarModelRepository {
                 .toList();
     }
 
-    public void update(CarModel model) {
+    public CarModel update(CarModel model) {
         CarModelEntity entity = jpaRepository.findById(model.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Error: CarModel not found"));
         CarModelEntity updated = mapper.toEntity(model);
@@ -45,7 +44,7 @@ public class CarModelRepositoryAdapter implements CarModelRepository {
         updated.setCreatedAt(entity.getCreatedAt());
         updated.setRemoved(entity.isRemoved());
         updated.setId(entity.getId());
-        jpaRepository.save(updated);
+        return mapper.toDomain(jpaRepository.save(updated));
     }
 
     public void delete(UUID id) {

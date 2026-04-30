@@ -13,9 +13,6 @@ public class CarEntity extends BaseEntity {
     @JoinColumn(name = "car_model_id", nullable = false)
     private CarModelEntity model;
 
-    @Embedded
-    private ConfigurationEmbeddable configuration;
-
     @Column(name = "is_available_for_test_drive", nullable = false)
     private boolean isAvailableForTestDrive;
 }

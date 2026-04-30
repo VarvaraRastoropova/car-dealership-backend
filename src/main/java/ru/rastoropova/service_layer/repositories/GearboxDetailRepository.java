@@ -8,6 +8,6 @@ public interface GearboxDetailRepository {
     GearboxDetail save(GearboxDetail detail);
     GearboxDetail find(UUID id);
     List<GearboxDetail> findAll();
-    void update(GearboxDetail detail);
+    GearboxDetail update(GearboxDetail detail);
     void delete(UUID id);
 }

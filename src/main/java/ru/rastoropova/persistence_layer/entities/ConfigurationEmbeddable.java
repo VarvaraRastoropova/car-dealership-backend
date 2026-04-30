@@ -3,27 +3,32 @@ package ru.rastoropova.persistence_layer.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import java.util.UUID;
 
 @Embeddable
 @Getter
 @Setter
 public class ConfigurationEmbeddable {
-    @Column(name = "body_id")
-    private UUID bodyId;
+    @ManyToOne
+    @JoinColumn(name = "body_id", nullable = false)
+    private BodyDetailEntity body;
 
-    @Column(name = "engine_id")
-    private UUID engineId;
+    @ManyToOne
+    @JoinColumn(name = "engine_id", nullable = false)
+    private EngineDetailEntity engine;
 
-    @Column(name = "gearbox_id")
-    private UUID gearboxId;
+    @ManyToOne
+    @JoinColumn(name = "gearbox_id", nullable = false)
+    private GearboxDetailEntity gearbox;
 
-    @Column(name = "interior_id")
-    private UUID interiorId;
+    @ManyToOne
+    @JoinColumn(name = "interior_id", nullable = false)
+    private InteriorDetailEntity interior;
 
-    @Column(name = "steering_wheel_id")
-    private UUID steeringWheelId;
+    @ManyToOne
+    @JoinColumn(name = "steering_wheel_id", nullable = false)
+    private SteeringWheelDetailEntity steeringWheel;
 
-    @Column(name = "wheels_id")
-    private UUID wheelsId;
+    @ManyToOne
+    @JoinColumn(name = "wheels_id", nullable = false)
+    private WheelsDetailEntity wheels;
 }

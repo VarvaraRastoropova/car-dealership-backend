@@ -45,7 +45,7 @@ public class UserRepositoryAdapter implements UserRepository {
                 .toList();
     }
 
-    public void update(User model) {
+    public User update(User model) {
         UserEntity entity = jpaRepository.findById(model.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Error: User not found"));
         UserEntity updated = mapper.toEntity(model);
@@ -53,7 +53,7 @@ public class UserRepositoryAdapter implements UserRepository {
         updated.setCreatedAt(entity.getCreatedAt());
         updated.setRemoved(entity.isRemoved());
         updated.setId(entity.getId());
-        jpaRepository.save(updated);
+        return mapper.toDomain(jpaRepository.save(updated));
     }
 
     public void delete(UUID id) {

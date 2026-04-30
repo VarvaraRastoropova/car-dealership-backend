@@ -1,7 +1,7 @@
 package ru.rastoropova.persistence_layer.mappers;
 
 import org.mapstruct.Mapper;
-import ru.rastoropova.persistence_layer.entities.CarModelEntity;
+import ru.rastoropova.persistence_layer.entities.*;
 import ru.rastoropova.service_layer.car_characteristics.CarModel;
 
 @Mapper(componentModel = "spring")

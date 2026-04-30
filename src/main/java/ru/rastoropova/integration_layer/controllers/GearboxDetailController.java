@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.rastoropova.integration_layer.dto.GearboxDetailDTO;
 import ru.rastoropova.integration_layer.mappers.GearboxDetailMapper;
 import ru.rastoropova.service_layer.services.DetailService;
-import ru.rastoropova.service_layer.users.Role;
 import java.util.List;
 import java.util.UUID;
 

@@ -3,10 +3,11 @@ package ru.rastoropova;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import ru.rastoropova.integration_layer.mappers.CarMapper;
+import ru.rastoropova.integration_layer.mappers.CarMapperImpl;
 import ru.rastoropova.service_layer.car_characteristics.*;
 import ru.rastoropova.service_layer.cars.Car;
 import ru.rastoropova.service_layer.cars.CarFilter;
-import ru.rastoropova.service_layer.cars.CarInformation;
 import ru.rastoropova.service_layer.cars.Configuration;
 import ru.rastoropova.service_layer.details.*;
 import ru.rastoropova.service_layer.orders.*;
@@ -18,6 +19,7 @@ import ru.rastoropova.service_layer.users.Role;
 import ru.rastoropova.service_layer.users.User;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,6 +27,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class CarDealershipTests {
+    private CarMapper carMapper = new CarMapperImpl();
+
     private CarService carService;
     private CarRepository carRepository;
     private CarModelRepository carModelRepository;
@@ -57,32 +61,30 @@ public class CarDealershipTests {
     private CarModel createCarModel(String name, String brand) {
         UUID id = UUID.randomUUID();
         Configuration baseConfiguration = createConfiguration();
-        return new CarModel(id, 10000, name, brand, baseConfiguration, new ArrayList<>(),
-                new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        return new CarModel(id, 10000, name, brand, baseConfiguration, new HashSet<>(),
+                new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>());
     }
 
     private Car createCarBMW320i(UUID id) {
-        Configuration baseConfiguration = createConfiguration();
         CarModel model = createCarModel("BMW320i", "BMW");
-        return new Car(id, model, baseConfiguration, true);
+        return new Car(id, model, true);
     }
 
     private Car createCarBMW330i(UUID id) {
-        Configuration baseConfiguration = createConfiguration();
         CarModel model = createCarModel("BMW330i", "BMW");
-        return new Car(id, model, baseConfiguration, true);
+        return new Car(id, model,true);
     }
 
     private Car createCarPorsche911(UUID id) {
-        Configuration baseConfiguration = createConfiguration();
         CarModel model = createCarModel("911", "PORSCHE");
-        return new Car(id, model, baseConfiguration,  true);
+        return new Car(id, model, true);
     }
 
     @BeforeEach
     public void setUp() {
+        carModelRepository = mock(CarModelRepository.class);
         carRepository = mock(CarRepository.class);
-        carService = new CarService(carRepository);
+        carService = new CarService(carModelRepository, carRepository, carMapper);
 
         bodyDetailRepository = mock(BodyDetailRepository.class);
         engineDetailRepository = mock(EngineDetailRepository.class);
@@ -181,7 +183,7 @@ public class CarDealershipTests {
         UUID id = UUID.randomUUID();
         Car car = createCarBMW320i(id);
         User customer = new User(id, "Bob", Role.CUSTOMER);
-        carService.addTestDriveCar(car);
+        carService.addTestDriveCar(carMapper.toDTO(car));
         when(testDriveOrderRepository.findAll()).thenReturn(new ArrayList<>());
 
         // Act
@@ -243,8 +245,8 @@ public class CarDealershipTests {
         UUID id = UUID.randomUUID();
         Car bmw = createCarBMW320i(id);
         Car porsche = createCarPorsche911(id);
-        carService.addTestDriveCar(bmw);
-        carService.addTestDriveCar(porsche);
+        carService.addTestDriveCar(carMapper.toDTO(bmw));
+        carService.addTestDriveCar(carMapper.toDTO(porsche));
         List<Car> cars = List.of(bmw, porsche);
         when(carRepository.findAll()).thenReturn(cars);
 
@@ -260,8 +262,8 @@ public class CarDealershipTests {
         Car porsche = createCarPorsche911(id);
         when(carRepository.find(bmw.getId())).thenReturn(bmw);
         when(carRepository.find(porsche.getId())).thenReturn(porsche);
-        carService.addTestDriveCar(bmw);
-        carService.addTestDriveCar(porsche);
+        carService.addTestDriveCar(carMapper.toDTO(bmw));
+        carService.addTestDriveCar(carMapper.toDTO(porsche));
         carService.deleteCarFromSystem(bmw.getId());
         carService.deleteCarFromSystem(porsche.getId());
         when(carRepository.findAll()).thenReturn(List.of());
@@ -352,21 +354,6 @@ public class CarDealershipTests {
     }
 
     @Test
-    public void changeInformation_shouldChangedCar() {
-        // Arrange
-        UUID id = UUID.randomUUID();
-        Car car = createCarBMW320i(id);
-        CarInformation information = new CarInformation();
-        information.setModel(createCarModel("310i", "BMW"));
-
-        // Act
-        car.changeInformation(car.getId(), information);
-
-        // Assert
-        assertEquals(car.getModel(), information.getModel());
-    }
-
-    @Test
     public void addCarToSystem_shouldCar_whenUserIsSystemAdministrator() {
         // Arrange
         UUID id = UUID.randomUUID();
@@ -374,7 +361,7 @@ public class CarDealershipTests {
         when(carRepository.find(car.getId())).thenReturn(null);
 
         // Act
-        carService.addCarToSystem(car);
+        carService.addCarToSystem(carMapper.toDTO(car));
 
         // Assert
         verify(carRepository, times(1)).find(car.getId());
@@ -388,7 +375,7 @@ public class CarDealershipTests {
         when(carRepository.find(car.getId())).thenReturn(car);
 
         // Act + Assert
-        assertThrows(RuntimeException.class, () -> carService.addCarToSystem(car));
+        assertThrows(RuntimeException.class, () -> carService.addCarToSystem(carMapper.toDTO(car)));
     }
 
     @Test
@@ -399,7 +386,7 @@ public class CarDealershipTests {
         when(carRepository.find(car.getId())).thenReturn(car);
 
         // Act + Assert
-        assertThrows(RuntimeException.class, () -> carService.addCarToSystem(car));
+        assertThrows(RuntimeException.class, () -> carService.addCarToSystem(carMapper.toDTO(car)));
     }
 
     @Test
@@ -503,6 +490,6 @@ public class CarDealershipTests {
         Car car = createCarBMW320i(id);
 
         // Act + Assert
-        assertThrows(RuntimeException.class, () -> car.getConfiguration().calculatePrice(car.getModel()));
+        assertThrows(RuntimeException.class, () -> car.getModel().getBaseConfiguration().calculatePrice(car.getModel()));
     }
 }

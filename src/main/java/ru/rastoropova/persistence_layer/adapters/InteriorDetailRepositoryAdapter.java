@@ -36,7 +36,7 @@ public class InteriorDetailRepositoryAdapter implements InteriorDetailRepository
                 .toList();
     }
 
-    public void update(InteriorDetail detail) {
+    public InteriorDetail update(InteriorDetail detail) {
         InteriorDetailEntity entity = jpaRepository.findById(detail.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Error: InteriorDetail not found"));
         InteriorDetailEntity updated = mapper.toEntity(detail);
@@ -44,7 +44,7 @@ public class InteriorDetailRepositoryAdapter implements InteriorDetailRepository
         updated.setCreatedAt(entity.getCreatedAt());
         updated.setRemoved(entity.isRemoved());
         updated.setId(entity.getId());
-        jpaRepository.save(updated);
+        return mapper.toDomain(jpaRepository.save(updated));
     }
 
     public void delete(UUID id) {

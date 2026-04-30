@@ -8,6 +8,6 @@ public interface SteeringWheelDetailRepository {
     SteeringWheelDetail save(SteeringWheelDetail detail);
     SteeringWheelDetail find(UUID id);
     List<SteeringWheelDetail> findAll();
-    void update(SteeringWheelDetail detail);
+    SteeringWheelDetail update(SteeringWheelDetail detail);
     void delete(UUID id);
 }

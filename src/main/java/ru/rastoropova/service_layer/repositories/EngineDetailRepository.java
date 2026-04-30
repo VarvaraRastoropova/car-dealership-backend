@@ -8,6 +8,6 @@ public interface EngineDetailRepository {
     EngineDetail save(EngineDetail detail);
     EngineDetail find(UUID id);
     List<EngineDetail> findAll();
-    void update(EngineDetail detail);
+    EngineDetail update(EngineDetail detail);
     void delete(UUID id);
 }

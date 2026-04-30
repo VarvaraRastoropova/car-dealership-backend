@@ -10,6 +10,6 @@ public interface CarRepository {
     Car find(UUID id);
     List<Car> findAll();
     List<Car> findByFilter(CarFilter filter);
-    void update(Car car);
+    Car update(Car car);
     void delete(UUID id);
 }

@@ -8,6 +8,6 @@ public interface InteriorDetailRepository {
     InteriorDetail save(InteriorDetail detail);
     InteriorDetail find(UUID id);
     List<InteriorDetail> findAll();
-    void update(InteriorDetail detail);
+    InteriorDetail update(InteriorDetail detail);
     void delete(UUID id);
 }

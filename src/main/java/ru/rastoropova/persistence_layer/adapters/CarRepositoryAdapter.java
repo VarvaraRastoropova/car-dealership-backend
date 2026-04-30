@@ -49,7 +49,7 @@ public class CarRepositoryAdapter implements CarRepository {
         return cars;
     }
 
-    public void update(Car car) {
+    public Car update(Car car) {
         CarEntity entity = jpaRepository.findById(car.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Error: Car not found"));
         CarEntity updated = mapper.toEntity(car);
@@ -57,7 +57,7 @@ public class CarRepositoryAdapter implements CarRepository {
         updated.setCreatedAt(entity.getCreatedAt());
         updated.setRemoved(entity.isRemoved());
         updated.setId(entity.getId());
-        jpaRepository.save(updated);
+        return mapper.toDomain(jpaRepository.save(updated));
     }
 
     public void delete(UUID id) {

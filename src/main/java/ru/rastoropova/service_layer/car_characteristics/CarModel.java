@@ -1,81 +1,68 @@
 package ru.rastoropova.service_layer.car_characteristics;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import ru.rastoropova.service_layer.cars.Configuration;
 import ru.rastoropova.service_layer.details.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
+@Setter
+@AllArgsConstructor
 public class CarModel {
     private UUID id;
     private int basePrice;
     private String name;
     private String brand;
     private Configuration baseConfiguration;
-    private List<BodyDetail> availableBodies;
-    private List<EngineDetail> availableEngines;
-    private List<GearboxDetail> availableGearboxes;
-    private List<InteriorDetail> availableInteriors;
-    private List<SteeringWheelDetail> availableSteeringWheels;
-    private List<WheelsDetail> availableWheels;
+    private Set<BodyDetail> availableBodies;
+    private Set<EngineDetail> availableEngines;
+    private Set<GearboxDetail> availableGearboxes;
+    private Set<InteriorDetail> availableInteriors;
+    private Set<SteeringWheelDetail> availableSteeringWheels;
+    private Set<WheelsDetail> availableWheels;
 
-    public CarModel(UUID id, int basePrice, String name, String brand, Configuration baseConfiguration, List<BodyDetail> availableBodies,
-                    List<EngineDetail> availableEngines, List<GearboxDetail> availableGearboxes, List<InteriorDetail> availableInteriors,
-                    List<SteeringWheelDetail> availableSteeringWheels, List<WheelsDetail> availableWheels) {
-        this.id = id;
-        this.basePrice = basePrice;
-        this.name = name;
-        this.brand = brand;
-        this.baseConfiguration = baseConfiguration;
-        this.availableBodies =  availableBodies;
-        this.availableEngines = availableEngines;
-        this.availableGearboxes = availableGearboxes;
-        this.availableInteriors = availableInteriors;
-        this.availableSteeringWheels = availableSteeringWheels;
-        this.availableWheels = availableWheels;
-    }
-
-    public List<BodyDetail> getAvailableBodies() {
+    public Set<BodyDetail> getAvailableBodies() {
         if (availableBodies == null) {
-            availableBodies = new ArrayList<>();
+            availableBodies = new HashSet<>();
         }
         return availableBodies;
     }
 
-    public List<EngineDetail> getAvailableEngines() {
+    public Set<EngineDetail> getAvailableEngines() {
         if (availableEngines == null) {
-            availableEngines = new ArrayList<>();
+            availableEngines = new HashSet<>();
         }
         return availableEngines;
     }
 
-    public List<GearboxDetail> getAvailableGearboxes() {
+    public Set<GearboxDetail> getAvailableGearboxes() {
         if (availableGearboxes == null) {
-            availableGearboxes = new ArrayList<>();
+            availableGearboxes = new HashSet<>();
         }
         return availableGearboxes;
     }
 
-    public List<InteriorDetail> getAvailableInteriors() {
+    public Set<InteriorDetail> getAvailableInteriors() {
         if (availableInteriors == null) {
-            availableInteriors = new ArrayList<>();
+            availableInteriors = new HashSet<>();
         }
         return availableInteriors;
     }
 
-    public List<SteeringWheelDetail> getAvailableSteeringWheels() {
+    public Set<SteeringWheelDetail> getAvailableSteeringWheels() {
         if (availableSteeringWheels == null) {
-            availableSteeringWheels = new ArrayList<>();
+            availableSteeringWheels = new HashSet<>();
         }
         return availableSteeringWheels;
     }
 
-    public List<WheelsDetail> getAvailableWheels() {
+    public Set<WheelsDetail> getAvailableWheels() {
         if (availableWheels == null) {
-            availableWheels = new ArrayList<>();
+            availableWheels = new HashSet<>();
         }
         return availableWheels;
     }

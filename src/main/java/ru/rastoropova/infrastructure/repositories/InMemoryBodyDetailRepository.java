@@ -19,10 +19,11 @@ public class InMemoryBodyDetailRepository implements BodyDetailRepository {
         return new ArrayList<>(storage.values());
     }
 
-    public void update(BodyDetail detail) {
+    public BodyDetail update(BodyDetail detail) {
         if (storage.containsKey(detail.getId())) {
             storage.put(detail.getId(), detail);
         }
+        return detail;
     }
 
     public void delete(UUID id) { storage.remove(id);}

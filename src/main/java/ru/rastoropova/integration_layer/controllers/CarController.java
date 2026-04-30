@@ -62,16 +62,15 @@ public class CarController {
     @PostMapping
     @PreAuthorize("hasAnyRole('WAREHOUSE_ADMINISTRATOR', 'SYSTEM_ADMINISTRATOR')")
     public CarDTO add(@RequestBody CarDTO dto) {
-        service.addCarToSystem(mapper.toDomain(dto));
+        service.addCarToSystem(dto);
         return dto;
     }
 
     @PostMapping("/{id}/test-drive")
     @PreAuthorize("hasAnyRole('CAR_MANAGER', 'SYSTEM_ADMINISTRATOR')")
     public CarDTO addTestDriveCar(@RequestBody CarDTO dto) {
-        var domain = mapper.toDomain(dto);
-        service.addTestDriveCar(domain);
-        return mapper.toDTO(domain);
+        service.addTestDriveCar(dto);
+        return dto;
     }
 
     @DeleteMapping("/{id}")

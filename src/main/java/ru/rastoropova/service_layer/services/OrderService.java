@@ -49,7 +49,7 @@ public class OrderService {
                 UUID.randomUUID(),
                 customerId,
                 getCarManagerId(),
-                carId,
+                car.getModel().getId(),
                 car.getPrice()
         );
         carPurchaseOrders.save(order);
@@ -119,7 +119,7 @@ public class OrderService {
             throw new DomainValidationException("Error: Invalid status.");
         }
         order.setStatus(newStatus);
-        carPurchaseOrders.update(order);
+        order = carPurchaseOrders.update(order);
         return order;
     }
 
@@ -133,7 +133,7 @@ public class OrderService {
             throw new DomainValidationException("Error: Invalid status.");
         }
         order.setStatus(newStatus);
-        carWithConfigurationPurchaseOrders.update(order);
+        order = carWithConfigurationPurchaseOrders.update(order);
         return order;
     }
 
@@ -147,7 +147,7 @@ public class OrderService {
             throw new DomainValidationException("Error: Invalid status.");
         }
         order.setStatus(newStatus);
-        testDriveOrders.update(order);
+        order = testDriveOrders.update(order);
         return order;
     }
 }

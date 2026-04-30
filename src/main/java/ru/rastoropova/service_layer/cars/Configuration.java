@@ -22,22 +22,22 @@ public class Configuration {
         if (body == null || engine == null || gearbox == null || interior == null || steeringWheel == null || wheels == null) {
             throw new DomainValidationException("Error: Not all nodes are specified.");
         }
-        if (!model.getAvailableBodies().contains(body)) {
+        if (model.getAvailableBodies().stream().noneMatch(b -> b.getId().equals(body.getId()))) {
             throw new IncompatibleComponentException("Error: Body " + body.getName() + " is incompatible with model " + model.getName());
         }
-        if (!model.getAvailableEngines().contains(engine)) {
+        if (model.getAvailableEngines().stream().noneMatch(e -> e.getId().equals(engine.getId()))) {
             throw new IncompatibleComponentException("Error: Engine " + engine.getName() + " is incompatible with model " + model.getName());
         }
-        if (!model.getAvailableGearboxes().contains(gearbox)) {
+        if (model.getAvailableGearboxes().stream().noneMatch(g -> g.getId().equals(gearbox.getId()))) {
             throw new IncompatibleComponentException("Error: Gearbox " + gearbox.getName() + " is incompatible with model " + model.getName());
         }
-        if (!model.getAvailableInteriors().contains(interior)) {
+        if (model.getAvailableInteriors().stream().noneMatch(i -> i.getId().equals(interior.getId()))) {
             throw new IncompatibleComponentException("Error: Interior " + interior.getName() + " is incompatible with model " + model.getName());
         }
-        if (!model.getAvailableSteeringWheels().contains(steeringWheel)) {
+        if (model.getAvailableSteeringWheels().stream().noneMatch(s -> s.getId().equals(steeringWheel.getId()))) {
             throw new IncompatibleComponentException("Error: SteeringWheel " + steeringWheel.getName() + " is incompatible with model " + model.getName());
         }
-        if (!model.getAvailableWheels().contains(wheels)) {
+        if (model.getAvailableWheels().stream().noneMatch(w -> w.getId().equals(wheels.getId()))) {
             throw new IncompatibleComponentException("Error: Wheels " + wheels.getName() + " is incompatible with model " + model.getName());
         }
     }

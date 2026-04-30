@@ -36,7 +36,7 @@ public class BodyDetailRepositoryAdapter implements BodyDetailRepository {
                 .toList();
     }
 
-    public void update(BodyDetail detail) {
+    public BodyDetail update(BodyDetail detail) {
         BodyDetailEntity entity = jpaRepository.findById(detail.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Error: BodyDetail not found"));
         BodyDetailEntity updated = mapper.toEntity(detail);
@@ -44,7 +44,7 @@ public class BodyDetailRepositoryAdapter implements BodyDetailRepository {
         updated.setCreatedAt(entity.getCreatedAt());
         updated.setRemoved(entity.isRemoved());
         updated.setId(entity.getId());
-        jpaRepository.save(updated);
+        return mapper.toDomain(jpaRepository.save(updated));
     }
 
     public void delete(UUID id) {

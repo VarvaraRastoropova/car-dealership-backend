@@ -24,23 +24,24 @@ public class InMemoryCarRepository implements CarRepository {
                 .filter(car ->
                         filter.getBrand() == null || car.getModel().getBrand() == filter.getBrand())
                 .filter(car ->
-                        filter.getBodyId() == null || car.getConfiguration().getBody().getId() == filter.getBodyId())
+                        filter.getBodyId() == null || car.getModel().getBaseConfiguration().getBody().getId() == filter.getBodyId())
                 .filter(car ->
-                        filter.getEngineId() == null || car.getConfiguration().getEngine().getId() == filter.getEngineId())
+                        filter.getEngineId() == null || car.getModel().getBaseConfiguration().getEngine().getId() == filter.getEngineId())
                 .filter(car ->
-                        filter.getGearboxId() == null || car.getConfiguration().getGearbox().getId() == filter.getGearboxId())
+                        filter.getGearboxId() == null || car.getModel().getBaseConfiguration().getGearbox().getId() == filter.getGearboxId())
                 .filter(car ->
-                        filter.getInteriorId() == null || car.getConfiguration().getInterior().getId() == filter.getInteriorId())
+                        filter.getInteriorId() == null || car.getModel().getBaseConfiguration().getInterior().getId() == filter.getInteriorId())
                 .filter(car ->
-                        filter.getSteeringWheelId() == null || car.getConfiguration().getSteeringWheel().getId() == filter.getSteeringWheelId())
+                        filter.getSteeringWheelId() == null || car.getModel().getBaseConfiguration().getSteeringWheel().getId() == filter.getSteeringWheelId())
                 .filter(car ->
-                        filter.getWheelsId() == null || car.getConfiguration().getWheels().getId() == filter.getWheelsId()).toList();
+                        filter.getWheelsId() == null || car.getModel().getBaseConfiguration().getWheels().getId() == filter.getWheelsId()).toList();
     }
 
-    public void update(Car car) {
+    public Car update(Car car) {
         if (storage.containsKey(car.getId())) {
             storage.put(car.getId(), car);
         }
+        return car;
     }
 
     public void delete(UUID id) { storage.remove(id); }
