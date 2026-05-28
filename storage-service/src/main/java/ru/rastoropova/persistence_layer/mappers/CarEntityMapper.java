@@ -5,7 +5,6 @@ import org.mapstruct.Mapping;
 import ru.rastoropova.persistence_layer.entities.CarEntity;
 import ru.rastoropova.persistence_layer.entities.CarModelEntity;
 import ru.rastoropova.service_layer.cars.Car;
-
 import java.util.UUID;
 
 @Mapper(componentModel = "spring")

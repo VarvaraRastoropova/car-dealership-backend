@@ -2,6 +2,7 @@ package ru.rastoropova.service_layer.services;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.rastoropova.integration_layer.dto.CarDTO;
 import ru.rastoropova.integration_layer.mappers.CarMapper;
 import ru.rastoropova.service_layer.car_characteristics.CarModel;
@@ -16,6 +17,7 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
+@Transactional(readOnly = true)
 public class CarService {
     private CarModelRepository carModelRepository;
     private CarRepository carRepository;
@@ -29,10 +31,11 @@ public class CarService {
     }
 
     public Car viewCar(UUID id) {
-        if (carRepository.find(id) == null) {
+        Car car = carRepository.find(id);
+        if (car == null) {
             throw new EntityNotFoundException("Error: Car not found.");
         }
-        return carRepository.find(id);
+        return car;
     }
 
     public List<Car> viewCarList() {

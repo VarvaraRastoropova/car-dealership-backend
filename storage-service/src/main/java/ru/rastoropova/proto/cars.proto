@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package ru.rastoropova.grpc;
+
+service CarService {
+  rpc GetAvailableCars (GetCarsRequest) returns (GetCarsResponse);
+  rpc GetCarById (GetCarByIdRequest) returns (CarResponse);
+}
+
+message GetCarsRequest {}
+
+message GetCarByIdRequest {
+  string id = 1;
+}
+
+message GetCarsResponse {
+  repeated CarResponse cars = 1;
+}
+
+message CarResponse {
+  string id = 1;
+  string model_name = 2;
+  string brand = 3;
+  int32 price = 4;
+  bool available_for_test_drive = 5;
+}

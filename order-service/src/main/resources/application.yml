@@ -25,3 +25,8 @@ spring:
           max-attempts: 3
           initial-interval: 1000
         default-requeue-rejected: true
+grpc:
+  client:
+    storage-service:
+      address: static://localhost:9090
+      negotiation-type: plaintext

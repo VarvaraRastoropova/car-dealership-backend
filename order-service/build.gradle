@@ -1,0 +1,5 @@
+dependencies {
+    implementation 'net.devh:grpc-client-spring-boot-starter:3.0.0.RELEASE'
+    implementation 'io.grpc:grpc-protobuf'
+    implementation 'io.grpc:grpc-stub'
+}
