@@ -1,8 +1,8 @@
 package ru.rastoropova.messaging;
 
 import lombok.AllArgsConstructor;
-import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 import ru.rastoropova.integration_layer.dto.AssemblyOrderDTO;
@@ -20,7 +20,6 @@ public class WarehouseEventListener {
     private WarehouseService warehouseService;
     private RabbitTemplate rabbitTemplate;
 
-//    @RabbitListener(queues = "order.sent.for.approval")
     @RabbitListener(queuesToDeclare = @Queue(name = "order.sent.for.approval"))
     public void handleOrderSentForApproval(OrderSentForApprovalEvent event) {
         if (warehouseService.existsBySourceOrderId(event.getOrderId())) {
