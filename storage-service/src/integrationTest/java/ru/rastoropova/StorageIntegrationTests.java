@@ -10,12 +10,15 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.RabbitMQContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.rastoropova.messaging.WarehouseEventListener;
+import ru.rastoropova.messaging.events.OrderApprovedEvent;
 import ru.rastoropova.messaging.events.OrderSentForApprovalEvent;
-import ru.rastoropova.service_layer.assembly.AssemblyOrder;
+import ru.rastoropova.service_layer.assembly.AssemblyOrderStatus;
 import ru.rastoropova.service_layer.services.WarehouseService;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
@@ -48,10 +51,13 @@ public class StorageIntegrationTests {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
+    @Autowired
+    private WarehouseEventListener warehouseEventListener;
+
     @Test
-    void shouldCreateAssemblyOrderWhenEventReceived() {
+    void shouldCreateAssemblyOrderAndPublishApproval() {
         UUID carModelId = UUID.fromString("a1b2c3d4-e5f6-4a1b-8c2d-3e4f5a6b7c8d");
-        UUID orderId = UUID.fromString("f47ac10b-58cc-4372-a567-0e02b2c3d479");
+        UUID orderId = UUID.randomUUID();
         UUID carId = UUID.fromString("3c4d5e6f-7a8b-9c0d-1e2f-3a4b5c6d7e8f");
         UUID employeeId = UUID.fromString("d0a75ba0-9cc8-40c7-8ac2-d5b4ab9fbd8e");
 
@@ -62,11 +68,20 @@ public class StorageIntegrationTests {
                 carModelId,
                 carId,
                 employeeId,
-                null);
+                Set.of());
 
-        rabbitTemplate.convertAndSend("order.exchange", "order.created.key", event);
+        warehouseEventListener.handleOrderSentForApproval(event);
 
-        List<AssemblyOrder> orders = warehouseService.viewAssemblyOrderList();
-        assertTrue(orders.stream().anyMatch(o -> o.getSourceOrderId().equals(event.getOrderId())));
+        var assemblyOrder = warehouseService.viewAssemblyOrderList().stream()
+                .filter(order -> orderId.equals(order.getSourceOrderId()))
+                .findFirst()
+                .orElseThrow();
+        assertEquals(AssemblyOrderStatus.ASSEMBLED, assemblyOrder.getStatus());
+
+        var approval = assertInstanceOf(
+                OrderApprovedEvent.class,
+                rabbitTemplate.receiveAndConvert("order.approved.queue", 5000)
+        );
+        assertEquals(orderId, approval.getOrderId());
     }
 }

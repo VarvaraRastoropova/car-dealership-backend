@@ -17,11 +17,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up JDK 18
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '18'
+          java-version: '21'
           cache: 'gradle'
 
       - name: Ensure Gradle wrapper is executable
@@ -32,6 +32,9 @@ jobs:
 
       - name: Unit tests
         run: ./gradlew --no-daemon test
+
+      - name: Check Docker
+        run: docker version
 
       - name: Integration tests (Testcontainers)
         run: ./gradlew --no-daemon integrationTest

@@ -1,5 +1,6 @@
 package ru.rastoropova;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,16 +46,16 @@ public class OrderIntegrationTests {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    private UUID orderId;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
-    @org.junit.jupiter.api.Order(1)
-    void shouldCreateOrderAndChangeStatusToPaid() {
-        UUID customerId = UUID.fromString("ce6af829-e318-45a8-82f9-83aaebb830a8");
+    void shouldPublishEventWhenOrderIsPaid() throws Exception {
+        UUID customerId = UUID.fromString("80920667-85ca-44a9-b65a-d81903edabbd");
         UUID carModelId = UUID.fromString("a1b2c3d4-e5f6-4a1b-8c2d-3e4f5a6b7c8d");
 
         var order = orderService.orderCar(customerId, carModelId, 1000);
-        orderId = order.getId();
+        UUID orderId = order.getId();
 
         orderService.changeCarPurchaseOrderStatus(orderId, CarPurchaseOrderStatus.APPROVED);
         orderService.changeCarPurchaseOrderStatus(orderId, CarPurchaseOrderStatus.WAITING_PAYMENT);
@@ -62,12 +63,9 @@ public class OrderIntegrationTests {
 
         var update = orderService.viewOrderCar(orderId);
         assertEquals(CarPurchaseOrderStatus.PAID, update.getStatus());
-    }
 
-    @Test
-    @org.junit.jupiter.api.Order(2)
-    void shouldSendMessageToRabbitMQ() throws InterruptedException {
         Object message = rabbitTemplate.receiveAndConvert("order.sent.for.approval", 5000);
-        assertNotNull(message);
+        String payload = assertInstanceOf(String.class, message);
+        assertEquals(orderId.toString(), objectMapper.readTree(payload).get("orderId").asText());
     }
 }

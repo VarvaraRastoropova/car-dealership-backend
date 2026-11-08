@@ -13,6 +13,8 @@ subprojects {
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'com.google.protobuf'
 
+    ext['testcontainers.version'] = '1.21.4'
+
     group = 'ru.rastoropova'
     version = '1.0-SNAPSHOT'
 
@@ -44,14 +46,14 @@ subprojects {
 
         testImplementation platform('org.junit:junit-bom:5.10.0')
         testImplementation 'org.junit.jupiter:junit-jupiter'
-        testImplementation 'org.testcontainers:junit-jupiter:1.19.7'
-        testImplementation 'org.testcontainers:postgresql:1.19.7'
+        testImplementation 'org.testcontainers:junit-jupiter'
+        testImplementation 'org.testcontainers:postgresql'
         testImplementation 'org.mockito:mockito-core:5.14.2'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         testImplementation 'org.springframework.security:spring-security-oauth2-jose'
         testImplementation 'com.nimbusds:nimbus-jose-jwt:9.37.3'
         testImplementation 'org.springframework.security:spring-security-test'
-        testImplementation 'org.testcontainers:rabbitmq:1.21.4'
+        testImplementation 'org.testcontainers:rabbitmq'
 
         compileOnly 'org.projectlombok:lombok:1.18.42'
         implementation 'org.postgresql:postgresql:42.7.4'
@@ -118,6 +120,7 @@ subprojects {
         shouldRunAfter test
         testLogging {
             events 'passed', 'skipped', 'failed'
+            exceptionFormat = 'full'
         }
     }
 

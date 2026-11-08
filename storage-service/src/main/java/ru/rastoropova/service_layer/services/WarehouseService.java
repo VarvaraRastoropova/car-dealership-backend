@@ -2,6 +2,7 @@ package ru.rastoropova.service_layer.services;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.rastoropova.integration_layer.dto.AssemblyOrderDTO;
 import ru.rastoropova.integration_layer.mappers.AssemblyOrderMapper;
 import ru.rastoropova.service_layer.assembly.AssemblyOrder;
@@ -26,12 +27,13 @@ public class WarehouseService {
     private AssemblyOrderMapper mapper;
 
     public AssemblyOrder createAssemblyOrder(AssemblyOrderDTO dto) {
-        if (assemblyOrderRepository.find(dto.getId()) != null) {
+        if (dto.getId() != null && assemblyOrderRepository.find(dto.getId()) != null) {
             throw new DomainValidationException("Error: Assembly order already exists.");
         }
         return assemblyOrderRepository.save(mapper.toDomain(dto));
     }
 
+    @Transactional
     public AssemblyOrder changeAssemblyOrderStatus(UUID id, AssemblyOrderStatus status) {
         AssemblyOrder order = assemblyOrderRepository.find(id);
         if (order == null) {
